@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JadeFi — Disciplined Capital Deployment Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cosmic-black: #030108;
+            --deep-void: #0a0618;
+            --nebula-purple: #1a0a2e;
+            --aurora-violet: #4a1c6b;
+            --stellar-blue: #0d1b3a;
+            --plasma-cyan: #00d4ff;
+            --nova-pink: #ff2d95;
+            --stardust-gold: #ffd700;
+            --cosmic-white: #e8e6f0;
+            --aurora-green: #00ff88;
+            --orb-glow: rgba(0, 212, 255, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--cosmic-black);
+            color: var(--cosmic-white);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Cosmic Noise Texture Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 10000;
+        }
+
+        /* Star Field Canvas */
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* Nebula Aurora Background */
+        .nebula-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: 
+                radial-gradient(ellipse 120% 80% at 20% 10%, rgba(74, 28, 107, 0.4) 0%, transparent 50%),
+                radial-gradient(ellipse 100% 60% at 80% 90%, rgba(13, 27, 58, 0.6) 0%, transparent 50%),
+                radial-gradient(ellipse 80% 100% at 90% 20%, rgba(26, 10, 46, 0.5) 0%, transparent 40%),
+                radial-gradient(ellipse 60% 80% at 10% 80%, rgba(0, 100, 150, 0.3) 0%, transparent 50%);
+            animation: nebulaShift 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes nebulaShift {
+            0% {
+                background: 
+                    radial-gradient(ellipse 120% 80% at 20% 10%, rgba(74, 28, 107, 0.4) 0%, transparent 50%),
+                    radial-gradient(ellipse 100% 60% at 80% 90%, rgba(13, 27, 58, 0.6) 0%, transparent 50%),
+                    radial-gradient(ellipse 80% 100% at 90% 20%, rgba(26, 10, 46, 0.5) 0%, transparent 40%),
+                    radial-gradient(ellipse 60% 80% at 10% 80%, rgba(0, 100, 150, 0.3) 0%, transparent 50%);
+            }
+            100% {
+                background: 
+                    radial-gradient(ellipse 100% 100% at 30% 20%, rgba(74, 28, 107, 0.5) 0%, transparent 45%),
+                    radial-gradient(ellipse 120% 70% at 70% 80%, rgba(13, 27, 58, 0.5) 0%, transparent 55%),
+                    radial-gradient(ellipse 90% 80% at 85% 30%, rgba(0, 80, 120, 0.4) 0%, transparent 45%),
+                    radial-gradient(ellipse 70% 90% at 15% 70%, rgba(26, 10, 46, 0.4) 0%, transparent 50%);
+            }
+        }
+
+        /* Aurora Bands */
+        .aurora {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .aurora-band {
+            position: absolute;
+            width: 200%;
+            height: 300px;
+            filter: blur(60px);
+            animation: auroraWave 15s ease-in-out infinite;
+        }
+
+        .aurora-band:nth-child(1) {
+            top: 5%;
+            left: -50%;
+            background: linear-gradient(90deg, transparent, var(--aurora-violet), var(--plasma-cyan), transparent);
+            animation-delay: 0s;
+        }
+
+        .aurora-band:nth-child(2) {
+            top: 20%;
+            left: -30%;
+            background: linear-gradient(90deg, transparent, var(--nova-pink), var(--aurora-violet), transparent);
+            animation-delay: -5s;
+            opacity: 0.6;
+        }
+
+        .aurora-band:nth-child(3) {
+            top: 60%;
+            left: -70%;
+            background: linear-gradient(90deg, transparent, var(--aurora-green), var(--plasma-cyan), transparent);
+            animation-delay: -10s;
+            opacity: 0.3;
+        }
+
+        @keyframes auroraWave {
+            0%, 100% { transform: translateX(0) skewX(-5deg) scaleY(1); }
+            25% { transform: translateX(10%) skewX(3deg) scaleY(1.2); }
+            50% { transform: translateX(-5%) skewX(-2deg) scaleY(0.8); }
+            75% { transform: translateX(15%) skewX(5deg) scaleY(1.1); }
+        }
+
+        /* Main Content Container */
+        .cosmic-container {
+            position: relative;
+            z-index: 100;
+            min-height: 100vh;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        /* Orbital Rings Decoration */
+        .orbit-system {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            transform-style: preserve-3d;
+            animation: orbitRotate 60s linear infinite;
+        }
+
+        .orbit-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .orbit-ring:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            transform: translate(-50%, -50%) rotateX(70deg);
+        }
+
+        .orbit-ring:nth-child(2) {
+            width: 500px;
+            height: 500px;
+            transform: translate(-50%, -50%) rotateX(70deg) rotateY(20deg);
+            border-color: rgba(255, 45, 149, 0.15);
+        }
+
+        .orbit-ring:nth-child(3) {
+            width: 600px;
+            height: 600px;
+            transform: translate(-50%, -50%) rotateX(70deg) rotateY(-15deg);
+            border-color: rgba(0, 255, 136, 0.1);
+        }
+
+        /* Orbital Planet Dots */
+        .orbit-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--plasma-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--plasma-cyan), 0 0 40px var(--plasma-cyan);
+        }
+
+        .orbit-dot:nth-child(4) {
+            top: 15%;
+            left: 50%;
+            animation: orbitPulse 3s ease-in-out infinite;
+        }
+
+        .orbit-dot:nth-child(5) {
+            top: 50%;
+            right: 5%;
+            background: var(--nova-pink);
+            box-shadow: 0 0 20px var(--nova-pink), 0 0 40px var(--nova-pink);
+            animation: orbitPulse 4s ease-in-out infinite 1s;
+        }
+
+        .orbit-dot:nth-child(6) {
+            bottom: 20%;
+            left: 20%;
+            background: var(--aurora-green);
+            box-shadow: 0 0 20px var(--aurora-green), 0 0 40px var(--aurora-green);
+            animation: orbitPulse 3.5s ease-in-out infinite 0.5s;
+        }
+
+        @keyframes orbitRotate {
+            from { transform: rotateZ(0deg); }
+            to { transform: rotateZ(360deg); }
+        }
+
+        @keyframes orbitPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.6; }
+        }
+
+        /* Logo / Brand */
+        .brand {
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            font-weight: 900;
+            letter-spacing: 0.3em;
+            background: linear-gradient(135deg, var(--plasma-cyan) 0%, var(--cosmic-white) 30%, var(--nova-pink) 60%, var(--aurora-green) 100%);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: holographicShift 8s ease infinite;
+            text-shadow: 0 0 60px rgba(0, 212, 255, 0.5);
+            position: relative;
+        }
+
+        .logo::after {
+            content: 'JADEFI';
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: linear-gradient(135deg, var(--plasma-cyan), var(--nova-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: blur(30px);
+            opacity: 0.5;
+            z-index: -1;
+        }
+
+        @keyframes holographicShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tagline {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--plasma-cyan);
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease-out 0.2s backwards;
+        }
+
+        .subtitle {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: rgba(232, 230, 240, 0.7);
+            max-width: 600px;
+            line-height: 1.6;
+            animation: fadeInUp 1s ease-out 0.4s backwards;
+        }
+
+        /* Glowing Orb Hero Element */
+        .cosmic-orb {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, 
+                rgba(0, 212, 255, 0.4) 0%, 
+                rgba(74, 28, 107, 0.3) 40%, 
+                rgba(3, 1, 8, 0.8) 70%,
+                transparent 100%);
+            box-shadow: 
+                0 0 80px rgba(0, 212, 255, 0.3),
+                0 0 160px rgba(74, 28, 107, 0.2),
+                inset 0 0 80px rgba(0, 212, 255, 0.1);
+            animation: orbFloat 8s ease-in-out infinite, orbGlow 4s ease-in-out infinite alternate;
+            z-index: -1;
+        }
+
+        .cosmic-orb::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 15%;
+            width: 40%;
+            height: 30%;
+            background: radial-gradient(ellipse, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(10px);
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.05); }
+        }
+
+        @keyframes orbGlow {
+            from { box-shadow: 0 0 80px rgba(0, 212, 255, 0.3), 0 0 160px rgba(74, 28, 107, 0.2); }
+            to { box-shadow: 0 0 100px rgba(0, 212, 255, 0.5), 0 0 200px rgba(255, 45, 149, 0.3); }
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 6rem 2rem;
+            position: relative;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 4rem;
+            background: linear-gradient(90deg, var(--plasma-cyan), var(--cosmic-white));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--plasma-cyan), transparent);
+            margin: 1rem auto 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, 
+                rgba(10, 6, 24, 0.9) 0%, 
+                rgba(26, 10, 46, 0.6) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transform: translateZ(0);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--plasma-cyan), var(--nova-pink), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(0, 212, 255, 0.5);
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.2);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-card:hover::after {
+            opacity: 1;
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--plasma-cyan), var(--aurora-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: rgba(232, 230, 240, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 6rem 2rem;
+            position: relative;
+        }
+
+        .features-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+        }
+
+        .feature-card {
+            position: relative;
+            padding: 3rem;
+            background: linear-gradient(180deg, 
+                rgba(26, 10, 46, 0.4) 0%, 
+                rgba(10, 6, 24, 0.8) 100%);
+            border-radius: 24px;
+            border: 1px solid rgba(74, 28, 107, 0.3);
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+                rgba(0, 212, 255, 0.1) 0%, 
+                transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(0, 212, 255, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .feature-orbit {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            width: 80px;
+            height: 80px;
+        }
+
+        .feature-orbit-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 60px;
+            height: 60px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) rotateX(60deg);
+            animation: miniOrbitSpin 10s linear infinite;
+        }
+
+        .feature-orbit-ring:nth-child(2) {
+            width: 80px;
+            height: 80px;
+            border-color: rgba(255, 45, 149, 0.2);
+            animation-duration: 15s;
+            animation-direction: reverse;
+        }
+
+        .feature-orbit-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 6px;
+            height: 6px;
+            background: var(--plasma-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--plasma-cyan);
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes miniOrbitSpin {
+            from { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(0deg); }
+            to { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(360deg); }
+        }
+
+        .feature-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--cosmic-white);
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.15rem;
+            color: rgba(232, 230, 240, 0.7);
+            line-height: 1.7;
+        }
+
+        /* Risk Framework Section */
+        .risk-section {
+            padding: 6rem 2rem;
+            position: relative;
+        }
+
+        .risk-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .risk-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+            padding: 2rem 0;
+            border-bottom: 1px solid rgba(74, 28, 107, 0.3);
+            position: relative;
+        }
+
+        .risk-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 1px;
+            background: linear-gradient(90deg, var(--plasma-cyan), var(--nova-pink));
+            transition: width 0.6s ease;
+        }
+
+        .risk-item:hover::before {
+            width: 100%;
+        }
+
+        .risk-icon {
+            width: 60px;
+            height: 60px;
+            min-width: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(74, 28, 107, 0.3));
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .risk-content h3 {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--plasma-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .risk-content p {
+            font-size: 1.1rem;
+            color: rgba(232, 230, 240, 0.7);
+            line-height: 1.6;
+        }
+
+        /* Success Criteria Section */
+        .criteria-section {
+            padding: 6rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .criteria-glow {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+            top: 50%;
+            left: -250px;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .criteria-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 1000px) {
+            .criteria-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .criteria-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .criteria-item {
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .criteria-ring {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .criteria-ring::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid transparent;
+            border-top-color: var(--plasma-cyan);
+            border-radius: 50%;
+            animation: criteriaRingSpin 3s linear infinite;
+        }
+
+        .criteria-ring::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 1px solid rgba(255, 45, 149, 0.3);
+            border-radius: 50%;
+            animation: criteriaRingSpin 5s linear infinite reverse;
+        }
+
+        @keyframes criteriaRingSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .criteria-icon {
+            font-size: 2.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .criteria-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--cosmic-white);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 8rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .cta-planet {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%,
+                rgba(74, 28, 107, 0.6) 0%,
+                rgba(13, 27, 58, 0.4) 50%,
+                rgba(3, 1, 8, 0.9) 100%);
+            right: -100px;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 
+                inset -30px -30px 60px rgba(0, 0, 0, 0.5),
+                0 0 100px rgba(74, 28, 107, 0.3);
+            animation: planetFloat 12s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        .cta-planet::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 20%;
+            width: 30%;
+            height: 20%;
+            background: radial-gradient(ellipse, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(5px);
+        }
+
+        @keyframes planetFloat {
+            0%, 100% { transform: translateY(-50%) rotate(0deg); }
+            50% { transform: translateY(-55%) rotate(5deg); }
+        }
+
+        .cta-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--cosmic-white), var(--plasma-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-subtitle {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1.3rem;
+            color: rgba(232, 230, 240, 0.7);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+        }
+
+        .cta-highlight {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(74, 28, 107, 0.2));
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--plasma-cyan);
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--cosmic-black);
+            background: linear-gradient(135deg, var(--plasma-cyan), var(--aurora-green));
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            text-decoration: none;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.5), 0 0 80px rgba(0, 255, 136, 0.3);
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        /* Footer */
+        .cosmic-footer {
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(74, 28, 107, 0.3);
+            position: relative;
+        }
+
+        .footer-tagline {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, var(--nova-pink), var(--plasma-cyan), var(--aurora-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .footer-note {
+            font-size: 0.9rem;
+            color: rgba(232, 230, 240, 0.4);
+        }
+
+        /* Floating Particles */
+        .particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: var(--plasma-cyan);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 50;
+            animation: particleFloat 20s linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(80vh) translateX(10px) scale(1);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(10vh) translateX(-10px) scale(1);
+            }
+            100% {
+                transform: translateY(-10vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            animation: fadeInUp 1s ease-out 1s backwards;
+        }
+
+        .scroll-text {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(232, 230, 240, 0.5);
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--plasma-cyan), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(1); }
+            50% { opacity: 1; transform: scaleY(1.2); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+                letter-spacing: 0.2em;
+            }
+
+            .tagline {
+                font-size: 1rem;
+                letter-spacing: 0.2em;
+            }
+
+            .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .orbit-system {
+                width: 350px;
+                height: 350px;
+            }
+
+            .orbit-ring:nth-child(1) { width: 250px; height: 250px; }
+            .orbit-ring:nth-child(2) { width: 300px; height: 300px; }
+            .orbit-ring:nth-child(3) { width: 350px; height: 350px; }
+
+            .cosmic-orb {
+                width: 200px;
+                height: 200px;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+
+            .features-container {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-title {
+                font-size: 2rem;
+            }
+
+            .cta-planet {
+                width: 200px;
+                height: 200px;
+                right: -50px;
+            }
+
+            .risk-item {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Constellation lines */
+        .constellation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .constellation line {
+            stroke: rgba(0, 212, 255, 0.1);
+            stroke-width: 0.5;
+        }
+
+        .constellation circle {
+            fill: rgba(232, 230, 240, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <!-- Star Field -->
+    <canvas id="starfield"></canvas>
+
+    <!-- Nebula Background -->
+    <div class="nebula-bg"></div>
+
+    <!-- Aurora Bands -->
+    <div class="aurora">
+        <div class="aurora-band"></div>
+        <div class="aurora-band"></div>
+        <div class="aurora-band"></div>
+    </div>
+
+    <!-- Constellation SVG -->
+    <svg class="constellation" id="constellation"></svg>
+
+    <!-- Floating Particles (generated by JS) -->
+
+    <!-- Main Content -->
+    <div class="cosmic-container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="orbit-system">
+                <div class="orbit-ring"></div>
+                <div class="orbit-ring"></div>
+                <div class="orbit-ring"></div>
+                <div class="orbit-dot"></div>
+                <div class="orbit-dot"></div>
+                <div class="orbit-dot"></div>
+            </div>
+
+            <div class="cosmic-orb"></div>
+
+            <div class="brand">
+                <h1 class="logo">JADEFI</h1>
+            </div>
+
+            <p class="tagline">Competence Before Expansion</p>
+
+            <p class="subtitle">Disciplined Capital Deployment Platform — Automated trading with hard risk limits, real-time transparency, and a focus on consistent performance.</p>
+
+            <div class="scroll-indicator">
+                <span class="scroll-text">Explore</span>
+                <div class="scroll-line"></div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <h2 class="section-title">Investment Overview</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-icon">💎</span>
+                    <div class="stat-value">$25K</div>
+                    <div class="stat-label">Total Capital</div>
+                </div>
+
+                <div class="stat-card">
+                    <span class="stat-icon">🔧</span>
+                    <div class="stat-value">$15K</div>
+                    <div class="stat-label">Build Allocation</div>
+                </div>
+
+                <div class="stat-card">
+                    <span class="stat-icon">🧪</span>
+                    <div class="stat-value">$10K</div>
+                    <div class="stat-label">Test Capital</div>
+                </div>
+
+                <div class="stat-card">
+                    <span class="stat-icon">📈</span>
+                    <div class="stat-value">~10%</div>
+                    <div class="stat-label">Target Return</div>
+                </div>
+
+                <div class="stat-card">
+                    <span class="stat-icon">⏱️</span>
+                    <div class="stat-value">30-60</div>
+                    <div class="stat-label">Day Evaluation</div>
+                </div>
+
+                <div class="stat-card">
+                    <span class="stat-icon">🎯</span>
+                    <div class="stat-value">1-2</div>
+                    <div class="stat-label">Liquid Markets</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <h2 class="section-title">Platform Architecture</h2>
+
+            <div class="features-container">
+                <div class="feature-card">
+                    <div class="feature-orbit">
+                        <div class="feature-orbit-ring"></div>
+                        <div class="feature-orbit-ring"></div>
+                        <div class="feature-orbit-dot"></div>
+                    </div>
+                    <h3 class="feature-title">Automated Trading</h3>
+                    <p class="feature-description">Algorithmic execution in 1-2 highly liquid markets. No manual intervention, no emotional decisions — pure systematic deployment following predetermined rules.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-orbit">
+                        <div class="feature-orbit-ring"></div>
+                        <div class="feature-orbit-ring"></div>
+                        <div class="feature-orbit-dot"></div>
+                    </div>
+                    <h3 class="feature-title">Rule-Based Execution</h3>
+                    <p class="feature-description">Every trade follows strict, predefined logic. No discretionary intervention means consistent behavior regardless of market conditions or operator sentiment.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-orbit">
+                        <div class="feature-orbit-ring"></div>
+                        <div class="feature-orbit-ring"></div>
+                        <div class="feature-orbit-dot"></div>
+                    </div>
+                    <h3 class="feature-title">Real-Time Dashboard</h3>
+                    <p class="feature-description">Full transparency with live investor dashboard. Track positions, performance, risk metrics, and system health at any moment — nothing hidden, everything auditable.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-orbit">
+                        <div class="feature-orbit-ring"></div>
+                        <div class="feature-orbit-ring"></div>
+                        <div class="feature-orbit-dot"></div>
+                    </div>
+                    <h3 class="feature-title">Hard Risk Limits</h3>
+                    <p class="feature-description">Non-negotiable position sizing rules and drawdown caps enforced at system level. Capital preservation isn't a guideline — it's hardcoded.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Risk Framework Section -->
+        <section class="risk-section">
+            <h2 class="section-title">Risk Framework</h2>
+
+            <div class="risk-container">
+                <div class="risk-item">
+                    <div class="risk-icon">📏</div>
+                    <div class="risk-content">
+                        <h3>Position Sizing Limits</h3>
+                        <p>Maximum exposure per trade and total portfolio allocation strictly defined. No single position can threaten overall capital.</p>
+                    </div>
+                </div>
+
+                <div class="risk-item">
+                    <div class="risk-icon">🛑</div>
+                    <div class="risk-content">
+                        <h3>Drawdown Caps</h3>
+                        <p>Hard stops at predefined drawdown levels. System automatically reduces or halts activity to preserve capital when limits approach.</p>
+                    </div>
+                </div>
+
+                <div class="risk-item">
+                    <div class="risk-icon">🔒</div>
+                    <div class="risk-content">
+                        <h3>No Discretionary Override</h3>
+                        <p>Rules execute as programmed. Human emotions, hunches, and second-guessing are architecturally impossible. The system follows the plan.</p>
+                    </div>
+                </div>
+
+                <div class="risk-item">
+                    <div class="risk-icon">🌊</div>
+                    <div class="risk-content">
+                        <h3>Liquidity Focus</h3>
+                        <p>Only operating in highly liquid markets ensures positions can be entered and exited without slippage or trapped capital.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Success Criteria Section -->
+        <section class="criteria-section">
+            <div class="criteria-glow"></div>
+
+            <h2 class="section-title">Success Criteria</h2>
+
+            <div class="criteria-grid">
+                <div class="criteria-item">
+                    <div class="criteria-ring">
+                        <span class="criteria-icon">⚡</span>
+                    </div>
+                    <div class="criteria-label">System Uptime</div>
+                </div>
+
+                <div class="criteria-item">
+                    <div class="criteria-ring">
+                        <span class="criteria-icon">🛡️</span>
+                    </div>
+                    <div class="criteria-label">Risk Adherence</div>
+                </div>
+
+                <div class="criteria-item">
+                    <div class="criteria-ring">
+                        <span class="criteria-icon">📊</span>
+                    </div>
+                    <div class="criteria-label">Performance</div>
+                </div>
+
+                <div class="criteria-item">
+                    <div class="criteria-ring">
+                        <span class="criteria-icon">👁️</span>
+                    </div>
+                    <div class="criteria-label">Transparency</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="cta-planet"></div>
+
+            <div class="cta-highlight">30-60 Day Evaluation Window</div>
+
+            <h2 class="cta-title">Disciplined Capital.<br>Transparent Performance.</h2>
+
+            <p class="cta-subtitle">A focused pilot to demonstrate systematic trading capability — proving competence before expansion through measurable results and complete transparency.</p>
+
+            <a href="#" class="cta-button">Begin Evaluation</a>
+        </section>
+
+        <!-- Footer -->
+        <footer class="cosmic-footer">
+            <p class="footer-tagline">Competence Before Expansion</p>
+            <p class="footer-note">JadeFi — Disciplined Capital Deployment Platform</p>
+        </footer>
+    </div>
+
+    <script>
+        // Star Field Animation
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        let shootingStars = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function createStars() {
+            stars = [];
+            const numStars = Math.floor((canvas.width * canvas.height) / 3000);
+            
+            for (let i = 0; i < numStars; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 1.5,
+                    opacity: Math.random(),
+                    twinkleSpeed: 0.005 + Math.random() * 0.01,
+                    twinklePhase: Math.random() * Math.PI * 2
+                });
+            }
+        }
+
+        function createShootingStar() {
+            if (Math.random() < 0.002) {
+                shootingStars.push({
+                    x: Math.random() * canvas.width,
+                    y: 0,
+                    length: 80 + Math.random() * 100,
+                    speed: 8 + Math.random() * 8,
+                    angle: Math.PI / 4 + (Math.random() - 0.5) * 0.3,
+                    opacity: 1
+                });
+            }
+        }
+
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw regular stars
+            stars.forEach(star => {
+                star.twinklePhase += star.twinkleSpeed;
+                const twinkle = 0.5 + 0.5 * Math.sin(star.twinklePhase);
+                
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(232, 230, 240, ${star.opacity * twinkle})`;
+                ctx.fill();
+
+                // Add glow to brighter stars
+                if (star.radius > 1) {
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.radius * 3, 0, Math.PI * 2);
+                    const gradient = ctx.createRadialGradient(
+                        star.x, star.y, 0,
+                        star.x, star.y, star.radius * 3
+                    );
+                    gradient.addColorStop(0, `rgba(0, 212, 255, ${0.3 * twinkle})`);
+                    gradient.addColorStop(1, 'rgba(0, 212, 255, 0)');
+                    ctx.fillStyle = gradient;
+                    ctx.fill();
+                }
+            });
+
+            // Draw shooting stars
+            shootingStars.forEach((star, index) => {
+                const tailX = star.x - Math.cos(star.angle) * star.length;
+                const tailY = star.y - Math.sin(star.angle) * star.length;
+
+                const gradient = ctx.createLinearGradient(tailX, tailY, star.x, star.y);
+                gradient.addColorStop(0, 'rgba(255, 255, 255, 0)');
+                gradient.addColorStop(1, `rgba(255, 255, 255, ${star.opacity})`);
+
+                ctx.beginPath();
+                ctx.moveTo(tailX, tailY);
+                ctx.lineTo(star.x, star.y);
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Add glow
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, 3, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(0, 212, 255, ${star.opacity * 0.8})`;
+                ctx.fill();
+
+                star.x += Math.cos(star.angle) * star.speed;
+                star.y += Math.sin(star.angle) * star.speed;
+                star.opacity -= 0.01;
+
+                if (star.opacity <= 0 || star.y > canvas.height) {
+                    shootingStars.splice(index, 1);
+                }
+            });
+
+            createShootingStar();
+            requestAnimationFrame(drawStars);
+        }
+
+        // Constellation Drawing
+        function createConstellation() {
+            const svg = document.getElementById('constellation');
+            svg.innerHTML = '';
+            
+            const points = [];
+            const numPoints = 12;
+            
+            for (let i = 0; i < numPoints; i++) {
+                points.push({
+                    x: Math.random() * window.innerWidth,
+                    y: Math.random() * window.innerHeight
+                });
+            }
+
+            // Connect nearby points
+            points.forEach((point, i) => {
+                points.forEach((other, j) => {
+                    if (i < j) {
+                        const dist = Math.hypot(point.x - other.x, point.y - other.y);
+                        if (dist < 300 && Math.random() > 0.5) {
+                            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                            line.setAttribute('x1', point.x);
+                            line.setAttribute('y1', point.y);
+                            line.setAttribute('x2', other.x);
+                            line.setAttribute('y2', other.y);
+                            svg.appendChild(line);
+                        }
+                    }
+                });
+
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', point.x);
+                circle.setAttribute('cy', point.y);
+                circle.setAttribute('r', 2);
+                svg.appendChild(circle);
+            });
+        }
+
+        // Floating Particles
+        function createParticles() {
+            const body = document.body;
+            const numParticles = 20;
+
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                
+                const colors = ['var(--plasma-cyan)', 'var(--nova-pink)', 'var(--aurora-green)', 'var(--stardust-gold)'];
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.boxShadow = `0 0 6px ${colors[Math.floor(Math.random() * colors.length)]}`;
+                
+                body.appendChild(particle);
+            }
+        }
+
+        // Feature card mouse tracking
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                card.style.setProperty('--mouse-x', x + '%');
+                card.style.setProperty('--mouse-y', y + '%');
+            });
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.stat-card, .feature-card, .risk-item, .criteria-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Initialize
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            createStars();
+            createConstellation();
+        });
+
+        resizeCanvas();
+        createStars();
+        createConstellation();
+        createParticles();
+        drawStars();
+
+        // Parallax effect for orbital system
+        document.addEventListener('mousemove', (e) => {
+            const orbitSystem = document.querySelector('.orbit-system');
+            if (orbitSystem) {
+                const x = (e.clientX / window.innerWidth - 0.5) * 20;
+                const y = (e.clientY / window.innerHeight - 0.5) * 20;
+                orbitSystem.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
+            }
+
+            const cosmicOrb = document.querySelector('.cosmic-orb');
+            if (cosmicOrb) {
+                const x = (e.clientX / window.innerWidth - 0.5) * 30;
+                const y = (e.clientY / window.innerHeight - 0.5) * 30;
+                cosmicOrb.style.transform = `translate(${x}px, ${y}px)`;
+            }
+        });
+    </script>
+</body>
+</html>

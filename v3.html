@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JadeFi — Disciplined Capital Deployment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --cream: #f8f6f3;
+            --off-white: #ede9e3;
+            --ink: #0a0a0a;
+            --shadow: rgba(0, 0, 0, 0.85);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            background: var(--black);
+            color: var(--cream);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--cream);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-dot {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: var(--cream);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transition: transform 0.08s ease;
+        }
+
+        .cursor.hover {
+            transform: scale(2.5);
+            background: rgba(248, 246, 243, 0.1);
+        }
+
+        /* Ink Ripple Effect */
+        .ink-ripple {
+            position: fixed;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(248,246,243,0.15) 0%, transparent 70%);
+            pointer-events: none;
+            transform: scale(0);
+            animation: ripple 1.5s ease-out forwards;
+            z-index: 1;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Liquid Background */
+        .liquid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: morph 15s ease-in-out infinite;
+        }
+
+        .blob-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(30,30,30,1) 0%, transparent 70%);
+            top: -200px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(40,40,40,1) 0%, transparent 70%);
+            bottom: -150px;
+            right: -100px;
+            animation-delay: -5s;
+        }
+
+        .blob-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(25,25,25,1) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -10s;
+        }
+
+        @keyframes morph {
+            0%, 100% {
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+                transform: rotate(0deg) scale(1);
+            }
+            25% {
+                border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+                transform: rotate(90deg) scale(1.1);
+            }
+            50% {
+                border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%;
+                transform: rotate(180deg) scale(0.95);
+            }
+            75% {
+                border-radius: 60% 40% 60% 30% / 70% 30% 50% 60%;
+                transform: rotate(270deg) scale(1.05);
+            }
+        }
+
+        /* SVG Filters for Liquid Effect */
+        .svg-filters {
+            position: absolute;
+            width: 0;
+            height: 0;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 2rem;
+            z-index: 10;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, transparent 0%, var(--black) 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(4rem, 12vw, 10rem);
+            font-weight: 400;
+            letter-spacing: 0.15em;
+            margin-bottom: 1rem;
+            background: linear-gradient(180deg, var(--cream) 0%, var(--off-white) 50%, rgba(200,195,185,0.8) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1.5s ease-out;
+            text-shadow: 0 0 80px rgba(255,255,255,0.1);
+        }
+
+        .tagline {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            font-weight: 300;
+            font-style: italic;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            opacity: 0.7;
+            animation: fadeInUp 1.5s ease-out 0.3s backwards;
+        }
+
+        .subtitle {
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            font-weight: 300;
+            margin-top: 3rem;
+            max-width: 600px;
+            line-height: 1.8;
+            animation: fadeInUp 1.5s ease-out 0.6s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            animation: fadeInUp 1.5s ease-out 1s backwards;
+        }
+
+        .scroll-text {
+            font-size: 0.75rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            opacity: 0.5;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(180deg, var(--cream) 0%, transparent 100%);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scaleY(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scaleY(1.2);
+            }
+        }
+
+        /* Wavy Divider */
+        .wave-divider {
+            position: relative;
+            width: 100%;
+            height: 150px;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .wave-divider svg {
+            position: absolute;
+            width: 200%;
+            height: 100%;
+            animation: waveFlow 8s linear infinite;
+        }
+
+        @keyframes waveFlow {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Sections */
+        section {
+            position: relative;
+            z-index: 10;
+            padding: 6rem 2rem;
+        }
+
+        .section-dark {
+            background: var(--black);
+        }
+
+        .section-light {
+            background: var(--cream);
+            color: var(--ink);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 400;
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 1px;
+            background: currentColor;
+            opacity: 0.5;
+        }
+
+        /* Investment Overview */
+        .investment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .investment-card {
+            position: relative;
+            padding: 3rem 2rem;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .investment-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.8s ease;
+        }
+
+        .investment-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .investment-card:hover {
+            background: rgba(255,255,255,0.04);
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+
+        .card-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 300;
+            opacity: 0.15;
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            line-height: 1;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .card-value {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(180deg, var(--cream) 0%, rgba(200,195,185,0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card-description {
+            font-size: 1rem;
+            opacity: 0.6;
+            line-height: 1.6;
+        }
+
+        /* Strategy Section */
+        .strategy-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        @media (max-width: 900px) {
+            .strategy-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .strategy-visual {
+            position: relative;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .liquid-orb {
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle at 30% 30%, var(--cream) 0%, var(--off-white) 30%, #888 70%, var(--ink) 100%);
+            border-radius: 50%;
+            animation: orbFloat 6s ease-in-out infinite, orbMorph 8s ease-in-out infinite;
+            box-shadow: 
+                inset -30px -30px 60px rgba(0,0,0,0.8),
+                inset 10px 10px 30px rgba(255,255,255,0.3),
+                0 0 80px rgba(255,255,255,0.1);
+        }
+
+        @keyframes orbFloat {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+
+        @keyframes orbMorph {
+            0%, 100% {
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            }
+            50% {
+                border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+            }
+        }
+
+        .strategy-list {
+            list-style: none;
+        }
+
+        .strategy-list li {
+            position: relative;
+            padding: 1.5rem 0;
+            padding-left: 2rem;
+            border-bottom: 1px solid rgba(10,10,10,0.1);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .strategy-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 8px;
+            height: 8px;
+            background: var(--ink);
+            border-radius: 50%;
+            transform: translateY(-50%);
+            transition: all 0.3s ease;
+        }
+
+        .strategy-list li:hover {
+            padding-left: 2.5rem;
+        }
+
+        .strategy-list li:hover::before {
+            width: 12px;
+            height: 12px;
+            background: transparent;
+            border: 2px solid var(--ink);
+        }
+
+        /* Risk Framework */
+        .risk-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            background: rgba(255,255,255,0.1);
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .risk-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .risk-item {
+            background: var(--black);
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .risk-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--cream);
+            transition: all 0.5s ease;
+            transform: translateX(-50%);
+        }
+
+        .risk-item:hover::after {
+            width: 60%;
+        }
+
+        .risk-item:hover {
+            background: rgba(255,255,255,0.03);
+        }
+
+        .risk-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1.5rem;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-style: italic;
+        }
+
+        .risk-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .risk-description {
+            font-size: 0.95rem;
+            opacity: 0.6;
+            line-height: 1.6;
+        }
+
+        /* Success Criteria */
+        .criteria-wrapper {
+            position: relative;
+            padding: 4rem 0;
+        }
+
+        .criteria-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(180deg, transparent, rgba(10,10,10,0.3), transparent);
+        }
+
+        @media (max-width: 768px) {
+            .criteria-line {
+                left: 2rem;
+            }
+        }
+
+        .criteria-item {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .criteria-item {
+                flex-direction: column;
+                align-items: flex-start;
+                padding-left: 4rem;
+                gap: 1rem;
+            }
+        }
+
+        .criteria-item:nth-child(even) {
+            flex-direction: row-reverse;
+            text-align: right;
+        }
+
+        @media (max-width: 768px) {
+            .criteria-item:nth-child(even) {
+                flex-direction: column;
+                text-align: left;
+            }
+        }
+
+        .criteria-content {
+            flex: 1;
+        }
+
+        .criteria-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--ink);
+            color: var(--cream);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-style: italic;
+            flex-shrink: 0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .criteria-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .criteria-description {
+            font-size: 1.1rem;
+            opacity: 0.7;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            position: relative;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .cta-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 80%, rgba(50,50,50,0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(40,40,40,0.3) 0%, transparent 50%),
+                var(--black);
+        }
+
+        .cta-content {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+            padding: 2rem;
+        }
+
+        .cta-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 400;
+            margin-bottom: 2rem;
+            line-height: 1.3;
+        }
+
+        .cta-tagline {
+            font-size: 1.5rem;
+            font-style: italic;
+            opacity: 0.7;
+            margin-bottom: 3rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1.2rem 3.5rem;
+            background: transparent;
+            color: var(--cream);
+            border: 1px solid var(--cream);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            text-decoration: none;
+            cursor: none;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--cream);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        .cta-button:hover {
+            color: var(--ink);
+        }
+
+        .cta-button:hover::before {
+            left: 0;
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 10;
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            letter-spacing: 0.15em;
+            margin-bottom: 1rem;
+        }
+
+        .footer-text {
+            font-size: 0.85rem;
+            opacity: 0.4;
+            letter-spacing: 0.1em;
+        }
+
+        /* Ink Blot Decoration */
+        .ink-blot {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.15;
+        }
+
+        .ink-blot svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Noise Overlay */
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        /* Vignette */
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9997;
+            background: radial-gradient(ellipse at center, transparent 0%, transparent 50%, rgba(0,0,0,0.4) 100%);
+        }
+    </style>
+</head>
+<body>
+    <!-- SVG Filters -->
+    <svg class="svg-filters">
+        <defs>
+            <filter id="goo">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- Noise Overlay -->
+    <div class="noise"></div>
+
+    <!-- Vignette -->
+    <div class="vignette"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-dot"></div>
+
+    <!-- Liquid Background -->
+    <div class="liquid-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="logo">JadeFi</h1>
+            <p class="tagline">Disciplined Capital Deployment</p>
+            <p class="subtitle">Automated trading systems built on precision, transparency, and unwavering risk discipline.</p>
+        </div>
+        <div class="scroll-indicator">
+            <span class="scroll-text">Discover</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- Wave Divider -->
+    <div class="wave-divider">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,60 C150,120 350,0 600,60 C850,120 1050,0 1200,60 L1200,120 L0,120 Z" fill="#f8f6f3"/>
+            <path d="M1200,60 C1350,120 1550,0 1800,60 C2050,120 2250,0 2400,60 L2400,120 L1200,120 Z" fill="#f8f6f3"/>
+        </svg>
+    </div>
+
+    <!-- Investment Overview Section -->
+    <section class="section-light">
+        <div class="container">
+            <h2 class="section-title reveal">The Opportunity</h2>
+            
+            <div class="investment-grid">
+                <div class="investment-card reveal" style="--delay: 0.1s;">
+                    <span class="card-number">01</span>
+                    <h3 class="card-title">Total Investment</h3>
+                    <p class="card-value">$25,000</p>
+                    <p class="card-description">$15,000 build capital + $10,000 test capital for live market validation</p>
+                </div>
+                
+                <div class="investment-card reveal" style="--delay: 0.2s;">
+                    <span class="card-number">02</span>
+                    <h3 class="card-title">Evaluation Window</h3>
+                    <p class="card-value">30-60 Days</p>
+                    <p class="card-description">Rigorous testing period to validate strategy performance and risk parameters</p>
+                </div>
+                
+                <div class="investment-card reveal" style="--delay: 0.3s;">
+                    <span class="card-number">03</span>
+                    <h3 class="card-title">Target Return</h3>
+                    <p class="card-value">~10%</p>
+                    <p class="card-description">Conservative targets aligned with sustainable, repeatable performance</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Strategy Section -->
+    <section class="section-dark">
+        <div class="container">
+            <div class="strategy-content">
+                <div class="strategy-visual reveal">
+                    <div class="liquid-orb"></div>
+                </div>
+                <div>
+                    <h2 class="section-title reveal">Strategic Framework</h2>
+                    <ul class="strategy-list reveal">
+                        <li>Automated trading in 1-2 liquid markets</li>
+                        <li>Rule-based execution protocol</li>
+                        <li>No discretionary intervention</li>
+                        <li>Real-time investor dashboard</li>
+                        <li>Complete operational transparency</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wave Divider Inverted -->
+    <div class="wave-divider" style="transform: rotate(180deg);">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,60 C150,120 350,0 600,60 C850,120 1050,0 1200,60 L1200,120 L0,120 Z" fill="#f8f6f3"/>
+            <path d="M1200,60 C1350,120 1550,0 1800,60 C2050,120 2250,0 2400,60 L2400,120 L1200,120 Z" fill="#f8f6f3"/>
+        </svg>
+    </div>
+
+    <!-- Risk Framework Section -->
+    <section class="section-light">
+        <div class="container">
+            <h2 class="section-title reveal">Risk Architecture</h2>
+            <p class="reveal" style="font-size: 1.2rem; opacity: 0.7; max-width: 600px; margin-bottom: 2rem;">Hard limits engineered into every layer of the system.</p>
+            
+            <div class="risk-grid">
+                <div class="risk-item reveal">
+                    <div class="risk-icon">P</div>
+                    <h3 class="risk-title">Position Sizing</h3>
+                    <p class="risk-description">Algorithmic position limits prevent overexposure to any single trade or market condition</p>
+                </div>
+                
+                <div class="risk-item reveal">
+                    <div class="risk-icon">D</div>
+                    <h3 class="risk-title">Drawdown Caps</h3>
+                    <p class="risk-description">Automatic circuit breakers halt trading when predefined loss thresholds are reached</p>
+                </div>
+                
+                <div class="risk-item reveal">
+                    <div class="risk-icon">R</div>
+                    <h3 class="risk-title">Rule Adherence</h3>
+                    <p class="risk-description">Zero deviation from established parameters—no emotional overrides permitted</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Criteria Section -->
+    <section class="section-dark">
+        <div class="container">
+            <h2 class="section-title reveal">Success Criteria</h2>
+            
+            <div class="criteria-wrapper">
+                <div class="criteria-line"></div>
+                
+                <div class="criteria-item reveal">
+                    <div class="criteria-content">
+                        <h3 class="criteria-title">System Uptime</h3>
+                        <p class="criteria-description">Continuous operation with 99.9% availability during market hours</p>
+                    </div>
+                    <div class="criteria-icon">U</div>
+                </div>
+                
+                <div class="criteria-item reveal">
+                    <div class="criteria-content">
+                        <h3 class="criteria-title">Risk Adherence</h3>
+                        <p class="criteria-description">Perfect compliance with all predefined risk parameters</p>
+                    </div>
+                    <div class="criteria-icon">R</div>
+                </div>
+                
+                <div class="criteria-item reveal">
+                    <div class="criteria-content">
+                        <h3 class="criteria-title">Performance</h3>
+                        <p class="criteria-description">Meeting or exceeding target returns within evaluation window</p>
+                    </div>
+                    <div class="criteria-icon">P</div>
+                </div>
+                
+                <div class="criteria-item reveal">
+                    <div class="criteria-content">
+                        <h3 class="criteria-title">Transparency</h3>
+                        <p class="criteria-description">Complete visibility into all trades, positions, and system decisions</p>
+                    </div>
+                    <div class="criteria-icon">T</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-bg"></div>
+        <div class="cta-content reveal">
+            <h2 class="cta-title">Competence Before Expansion</h2>
+            <p class="cta-tagline">"Prove it works small. Then scale with confidence."</p>
+            <a href="#" class="cta-button">Request Access</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-logo">JadeFi</div>
+        <p class="footer-text">Disciplined Capital Deployment Platform</p>
+    </footer>
+
+    <script>
+        // Custom Cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorDot = document.querySelector('.cursor-dot');
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+        let dotX = 0, dotY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateCursor() {
+            cursorX += (mouseX - cursorX) * 0.15;
+            cursorY += (mouseY - cursorY) * 0.15;
+            dotX += (mouseX - dotX) * 0.35;
+            dotY += (mouseY - dotY) * 0.35;
+
+            cursor.style.left = cursorX - 10 + 'px';
+            cursor.style.top = cursorY - 10 + 'px';
+            cursorDot.style.left = dotX - 3 + 'px';
+            cursorDot.style.top = dotY - 3 + 'px';
+
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // Cursor hover effect
+        const hoverElements = document.querySelectorAll('a, button, .investment-card, .risk-item');
+        hoverElements.forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // Ink Ripple on Click
+        document.addEventListener('click', (e) => {
+            const ripple = document.createElement('div');
+            ripple.className = 'ink-ripple';
+            ripple.style.left = e.clientX - 50 + 'px';
+            ripple.style.top = e.clientY - 50 + 'px';
+            ripple.style.width = '100px';
+            ripple.style.height = '100px';
+            document.body.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 1500);
+        });
+
+        // Scroll Reveal Animation
+        const revealElements = document.querySelectorAll('.reveal');
+        
+        const revealOnScroll = () => {
+            revealElements.forEach(el => {
+                const elementTop = el.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementTop < windowHeight - 100) {
+                    el.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll(); // Initial check
+
+        // Parallax Effect for Blobs
+        document.addEventListener('mousemove', (e) => {
+            const blobs = document.querySelectorAll('.blob');
+            const x = (e.clientX - window.innerWidth / 2) / 50;
+            const y = (e.clientY - window.innerHeight / 2) / 50;
+            
+            blobs.forEach((blob, i) => {
+                const factor = (i + 1) * 0.5;
+                blob.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Mouse-following ink effect on hero
+        const hero = document.querySelector('.hero');
+        hero.addEventListener('mousemove', (e) => {
+            const rect = hero.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            
+            hero.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(30,30,30,0.8) 0%, transparent 50%), var(--black)`;
+        });
+
+        // Section Light cards invert colors for dark theme
+        const investmentCards = document.querySelectorAll('.section-light .investment-card');
+        investmentCards.forEach(card => {
+            card.style.background = 'rgba(10,10,10,0.02)';
+            card.style.borderColor = 'rgba(10,10,10,0.08)';
+        });
+    </script>
+</body>
+</html>

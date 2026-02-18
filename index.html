@@ -3,24 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JadeFi — Disciplined Capital Deployment</title>
+    <title>JadeFi — Design Concepts</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Space+Mono:wght@400;700&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --void: #050508;
-            --abyss: #0a0a0f;
-            --deep: #0d0d14;
-            --surface: #14141e;
-            --platinum: #e8e8ec;
-            --silver: #9898a4;
-            --mercury: #6a6a78;
-            --jade-core: #00d4aa;
-            --jade-glow: #00ffcc;
-            --ember: #ff6b4a;
-            --violet: #8b5cf6;
-            --shimmer: linear-gradient(135deg, #00d4aa 0%, #8b5cf6 50%, #ff6b4a 100%);
+            --bg: #0a0a0c;
+            --surface: #111114;
+            --border: rgba(255,255,255,0.06);
+            --text: #f0f0f2;
+            --muted: #6a6a78;
+            --jade: #00d4aa;
         }
 
         * {
@@ -34,1633 +28,451 @@
         }
 
         body {
-            font-family: 'Instrument Sans', sans-serif;
-            background: var(--void);
-            color: var(--platinum);
-            line-height: 1.7;
-            overflow-x: hidden;
-            cursor: crosshair;
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
         }
 
-        /* Custom cursor follower */
-        .cursor-glow {
-            position: fixed;
-            width: 400px;
-            height: 400px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(0, 212, 170, 0.08) 0%, transparent 70%);
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            z-index: 9999;
-            transition: opacity 0.3s ease;
-        }
-
-        /* Noise texture overlay */
         .noise {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             pointer-events: none;
             z-index: 10000;
-            opacity: 0.03;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
         }
 
-        /* Typography */
-        .display {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 300;
-            letter-spacing: -0.02em;
-        }
-
-        .mono {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.75rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-        }
-
-        /* Hero Section */
-        .hero {
-            position: relative;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 4rem;
-            overflow: hidden;
-        }
-
-        .hero-bg {
-            position: absolute;
-            inset: 0;
-            background: 
-                radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0, 212, 170, 0.12) 0%, transparent 50%),
-                radial-gradient(ellipse 60% 40% at 100% 100%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse 50% 30% at 0% 80%, rgba(255, 107, 74, 0.05) 0%, transparent 50%);
-        }
-
-        /* Floating geometric shapes */
-        .geometry {
-            position: absolute;
-            pointer-events: none;
-        }
-
-        .geo-1 {
-            top: 10%;
-            right: 15%;
-            width: 300px;
-            height: 300px;
-            border: 1px solid rgba(0, 212, 170, 0.2);
-            transform: rotate(45deg);
-            animation: float-1 20s ease-in-out infinite, pulse-border 4s ease-in-out infinite;
-        }
-
-        .geo-2 {
-            top: 20%;
-            right: 20%;
-            width: 200px;
-            height: 200px;
-            border: 1px solid rgba(139, 92, 246, 0.15);
-            transform: rotate(30deg);
-            animation: float-2 25s ease-in-out infinite;
-        }
-
-        .geo-3 {
-            bottom: 15%;
-            left: 10%;
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            border: 1px solid rgba(255, 107, 74, 0.15);
-            animation: float-3 18s ease-in-out infinite;
-        }
-
-        .geo-4 {
-            top: 40%;
-            left: 5%;
-            width: 2px;
-            height: 200px;
-            background: linear-gradient(to bottom, transparent, var(--jade-core), transparent);
-            animation: pulse-line 3s ease-in-out infinite;
-        }
-
-        /* Impossible triangle */
-        .impossible-shape {
-            position: absolute;
-            right: 10%;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 400px;
-            height: 400px;
-            opacity: 0.6;
-        }
-
-        .impossible-shape svg {
-            width: 100%;
-            height: 100%;
-            animation: rotate-slow 60s linear infinite;
-        }
-
-        @keyframes float-1 {
-            0%, 100% { transform: rotate(45deg) translateY(0) translateX(0); }
-            25% { transform: rotate(47deg) translateY(-20px) translateX(10px); }
-            50% { transform: rotate(43deg) translateY(-10px) translateX(-15px); }
-            75% { transform: rotate(46deg) translateY(-25px) translateX(5px); }
-        }
-
-        @keyframes float-2 {
-            0%, 100% { transform: rotate(30deg) translateY(0); }
-            50% { transform: rotate(35deg) translateY(-30px); }
-        }
-
-        @keyframes float-3 {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        @keyframes pulse-border {
-            0%, 100% { border-color: rgba(0, 212, 170, 0.2); }
-            50% { border-color: rgba(0, 212, 170, 0.4); }
-        }
-
-        @keyframes pulse-line {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.8; }
-        }
-
-        @keyframes rotate-slow {
-            from { transform: translateY(-50%) rotate(0deg); }
-            to { transform: translateY(-50%) rotate(360deg); }
-        }
-
-        /* Nav */
-        .nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            padding: 2rem 4rem;
+        header {
+            padding: 3rem 4rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 1000;
-            mix-blend-mode: difference;
+            border-bottom: 1px solid var(--border);
         }
 
         .logo {
-            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
             font-size: 1.5rem;
-            font-weight: 400;
-            letter-spacing: 0.3em;
-            color: var(--platinum);
+            letter-spacing: 0.15em;
+            color: var(--jade);
         }
 
-        .nav-links {
-            display: flex;
-            gap: 3rem;
-        }
-
-        .nav-links a {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--silver);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--jade-glow);
-        }
-
-        /* Hero content */
-        .hero-content {
-            position: relative;
-            z-index: 10;
-            max-width: 900px;
-        }
-
-        .hero-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 3rem;
-            animation: fade-in 1s ease-out 0.2s both;
-        }
-
-        .hero-label::before {
-            content: '';
-            width: 40px;
-            height: 1px;
-            background: var(--jade-core);
-        }
-
-        .hero-label span {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: var(--jade-core);
-        }
-
-        .hero-title {
-            font-size: clamp(3.5rem, 10vw, 8rem);
-            line-height: 0.95;
-            margin-bottom: 2rem;
-            animation: fade-in 1s ease-out 0.4s both;
-        }
-
-        .hero-title .line {
-            display: block;
-            overflow: hidden;
-        }
-
-        .hero-title .word {
-            display: inline-block;
-            animation: slide-up 1s cubic-bezier(0.16, 1, 0.3, 1) both;
-        }
-
-        .hero-title .line:nth-child(1) .word { animation-delay: 0.5s; }
-        .hero-title .line:nth-child(2) .word { animation-delay: 0.6s; }
-        .hero-title .line:nth-child(3) .word { animation-delay: 0.7s; }
-
-        .hero-title em {
-            font-style: italic;
-            background: var(--shimmer);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        @keyframes slide-up {
-            from { transform: translateY(100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes fade-in {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .hero-text {
-            font-size: 1.25rem;
-            color: var(--silver);
-            max-width: 600px;
-            margin-bottom: 3rem;
-            animation: fade-in 1s ease-out 0.8s both;
-        }
-
-        .hero-cta {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-            animation: fade-in 1s ease-out 1s both;
-        }
-
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1.25rem 2.5rem;
-            background: transparent;
-            border: 1px solid var(--jade-core);
-            color: var(--platinum);
-            font-family: 'Space Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            text-decoration: none;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s ease;
-            cursor: pointer;
-        }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: var(--jade-core);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.4s ease;
-            z-index: -1;
-        }
-
-        .btn-primary:hover::before {
-            transform: scaleX(1);
-        }
-
-        .btn-primary:hover {
-            color: var(--void);
-        }
-
-        .btn-secondary {
-            color: var(--silver);
+        .tagline {
             font-family: 'Space Mono', monospace;
             font-size: 0.7rem;
             letter-spacing: 0.15em;
             text-transform: uppercase;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: color 0.3s ease;
+            color: var(--muted);
         }
 
-        .btn-secondary:hover {
-            color: var(--platinum);
+        main {
+            padding: 6rem 4rem;
+            max-width: 1600px;
+            margin: 0 auto;
         }
 
-        .btn-secondary svg {
-            width: 16px;
-            height: 16px;
-            transition: transform 0.3s ease;
+        .intro {
+            max-width: 700px;
+            margin-bottom: 5rem;
         }
 
-        .btn-secondary:hover svg {
-            transform: translateX(4px);
-        }
-
-        /* Scroll indicator */
-        .scroll-indicator {
-            position: absolute;
-            bottom: 4rem;
-            left: 4rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            animation: fade-in 1s ease-out 1.5s both;
-        }
-
-        .scroll-line {
-            width: 1px;
-            height: 60px;
-            background: linear-gradient(to bottom, var(--jade-core), transparent);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .scroll-line::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            width: 100%;
-            height: 20px;
-            background: var(--jade-glow);
-            animation: scroll-pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes scroll-pulse {
-            0% { transform: translateY(-100%); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateY(300%); opacity: 0; }
-        }
-
-        /* Stats bar */
-        .stats-bar {
-            position: absolute;
-            bottom: 4rem;
-            right: 4rem;
-            display: flex;
-            gap: 4rem;
-            animation: fade-in 1s ease-out 1.2s both;
-        }
-
-        .stat {
-            text-align: right;
-        }
-
-        .stat-value {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2.5rem;
-            font-weight: 300;
-            color: var(--platinum);
-            line-height: 1;
-        }
-
-        .stat-value span {
-            color: var(--jade-core);
-        }
-
-        .stat-label {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--mercury);
-            margin-top: 0.5rem;
-        }
-
-        /* Section base */
-        section {
-            position: relative;
-            padding: 10rem 4rem;
-        }
-
-        .section-header {
-            max-width: 800px;
-            margin-bottom: 6rem;
-        }
-
-        .section-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .section-label::before {
-            content: '';
-            width: 40px;
-            height: 1px;
-            background: var(--jade-core);
-        }
-
-        .section-label span {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: var(--jade-core);
-        }
-
-        .section-title {
+        .intro h1 {
             font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 300;
             line-height: 1.1;
             margin-bottom: 1.5rem;
         }
 
-        .section-text {
-            font-size: 1.15rem;
-            color: var(--silver);
-            max-width: 600px;
+        .intro h1 span {
+            color: var(--jade);
         }
 
-        /* Why section */
-        .why-section {
-            background: var(--abyss);
+        .intro p {
+            font-size: 1.1rem;
+            color: var(--muted);
         }
 
-        .why-grid {
+        .grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
             gap: 2rem;
         }
 
-        .why-card {
-            padding: 3rem;
+        .card {
+            position: relative;
             background: var(--surface);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            position: relative;
+            border: 1px solid var(--border);
             overflow: hidden;
-            transition: all 0.4s ease;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
 
-        .why-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
+        .card:hover {
+            border-color: var(--jade);
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px -20px rgba(0, 212, 170, 0.15);
+        }
+
+        .card-preview {
+            aspect-ratio: 16/10;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-preview img {
             width: 100%;
-            height: 2px;
-            background: var(--shimmer);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.6s ease;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+            transition: all 0.5s ease;
         }
 
-        .why-card:hover::before {
-            transform: scaleX(1);
+        .card:hover .card-preview img {
+            opacity: 1;
+            transform: scale(1.05);
         }
 
-        .why-card:hover {
-            background: rgba(20, 20, 30, 0.8);
-            border-color: rgba(0, 212, 170, 0.1);
-        }
-
-        .why-icon {
-            width: 48px;
-            height: 48px;
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid var(--jade-core);
-            color: var(--jade-core);
-        }
-
-        .why-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.75rem;
-            font-weight: 400;
-            margin-bottom: 1rem;
-        }
-
-        .why-desc {
-            color: var(--silver);
-            font-size: 0.95rem;
-        }
-
-        /* Architecture Section */
-        .arch-section {
-            background: 
-                radial-gradient(ellipse 100% 50% at 50% 100%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
-                var(--void);
-            overflow: hidden;
-        }
-
-        .arch-visual {
-            position: relative;
-            height: 500px;
-            margin-bottom: 4rem;
-        }
-
-        .arch-layer {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 2rem 4rem;
-            border: 1px solid rgba(0, 212, 170, 0.3);
-            background: rgba(10, 10, 15, 0.8);
-            backdrop-filter: blur(10px);
-            text-align: center;
-            transition: all 0.4s ease;
-        }
-
-        .arch-layer:hover {
-            border-color: var(--jade-core);
-            box-shadow: 0 0 60px rgba(0, 212, 170, 0.2);
-        }
-
-        .arch-layer-1 {
-            top: 0;
-            width: 80%;
-            max-width: 600px;
-        }
-
-        .arch-layer-2 {
-            top: 120px;
-            width: 70%;
-            max-width: 500px;
-        }
-
-        .arch-layer-3 {
-            top: 240px;
-            width: 60%;
-            max-width: 400px;
-        }
-
-        .arch-layer-4 {
-            top: 360px;
-            width: 50%;
-            max-width: 300px;
-            border-color: var(--jade-core);
-            background: rgba(0, 212, 170, 0.05);
-        }
-
-        .arch-layer-name {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--jade-core);
-            margin-bottom: 0.5rem;
-        }
-
-        .arch-layer-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.5rem;
-        }
-
-        /* Connectors */
-        .arch-connector {
-            position: absolute;
-            left: 50%;
-            width: 1px;
-            background: linear-gradient(to bottom, var(--jade-core), rgba(0, 212, 170, 0.2));
-        }
-
-        .conn-1 { top: 80px; height: 40px; }
-        .conn-2 { top: 200px; height: 40px; }
-        .conn-3 { top: 320px; height: 40px; }
-
-        .arch-features {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 3rem;
-        }
-
-        .arch-feature {
-            padding: 2rem;
-            border-left: 1px solid rgba(139, 92, 246, 0.3);
-            transition: border-color 0.3s ease;
-        }
-
-        .arch-feature:hover {
-            border-color: var(--violet);
-        }
-
-        .arch-feature-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .arch-feature-desc {
-            color: var(--silver);
-            font-size: 0.9rem;
-        }
-
-        /* Pilot Section */
-        .pilot-section {
-            background: var(--deep);
-        }
-
-        .pilot-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6rem;
-            align-items: start;
-        }
-
-        .pilot-details {
-            position: sticky;
-            top: 4rem;
-        }
-
-        .pilot-amount {
-            margin-bottom: 3rem;
-        }
-
-        .pilot-value {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 6rem;
-            font-weight: 300;
-            line-height: 1;
-            background: var(--shimmer);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .pilot-currency {
-            font-family: 'Space Mono', monospace;
-            font-size: 1.5rem;
-            color: var(--silver);
-            margin-left: 0.5rem;
-        }
-
-        .pilot-breakdown {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        .pilot-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .pilot-item-label {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .pilot-item-label::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: var(--jade-core);
-        }
-
-        .pilot-item-value {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.9rem;
-            color: var(--platinum);
-        }
-
-        .pilot-params {
-            background: var(--abyss);
-            padding: 3rem;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-        }
-
-        .pilot-params-title {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--jade-core);
-            margin-bottom: 2rem;
-        }
-
-        .param-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .param {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-        }
-
-        .param-marker {
-            width: 20px;
-            height: 20px;
-            border: 1px solid var(--mercury);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .param-marker::after {
-            content: '';
-            width: 6px;
-            height: 6px;
-            background: var(--jade-core);
-        }
-
-        .param-text {
-            color: var(--silver);
-            font-size: 0.95rem;
-        }
-
-        /* Risk Section */
-        .risk-section {
-            background: 
-                radial-gradient(ellipse 60% 40% at 0% 50%, rgba(255, 107, 74, 0.06) 0%, transparent 50%),
-                var(--void);
-        }
-
-        .risk-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0;
-        }
-
-        .risk-card {
-            padding: 3rem;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            margin: -1px;
-            position: relative;
-            transition: all 0.4s ease;
-        }
-
-        .risk-card::after {
-            content: '';
+        .card-gradient {
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, rgba(255, 107, 74, 0.05) 0%, transparent 100%);
-            opacity: 0;
+            opacity: 0.9;
             transition: opacity 0.4s ease;
         }
 
-        .risk-card:hover::after {
-            opacity: 1;
+        .card:hover .card-gradient {
+            opacity: 0.7;
         }
 
-        .risk-card:hover {
-            border-color: rgba(255, 107, 74, 0.2);
-        }
-
-        .risk-number {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 3rem;
-            font-weight: 300;
-            color: var(--ember);
-            opacity: 0.5;
-            margin-bottom: 1rem;
-        }
-
-        .risk-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .risk-desc {
-            color: var(--silver);
-            font-size: 0.9rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Success Criteria */
-        .success-section {
-            background: var(--abyss);
-        }
-
-        .success-timeline {
-            position: relative;
-            padding-left: 4rem;
-        }
-
-        .success-timeline::before {
-            content: '';
+        .card-number {
             position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: linear-gradient(to bottom, var(--jade-core), var(--violet), var(--ember));
-        }
-
-        .success-item {
-            position: relative;
-            padding: 2rem 0 4rem;
-        }
-
-        .success-item::before {
-            content: '';
-            position: absolute;
-            left: -4rem;
-            top: 2.5rem;
-            width: 12px;
-            height: 12px;
-            background: var(--void);
-            border: 2px solid var(--jade-core);
-            transform: translateX(-5px);
-        }
-
-        .success-item:nth-child(2)::before { border-color: var(--violet); }
-        .success-item:nth-child(3)::before { border-color: var(--ember); }
-        .success-item:nth-child(4)::before { border-color: var(--jade-core); }
-
-        .success-number {
+            top: 1.5rem;
+            left: 1.5rem;
             font-family: 'Space Mono', monospace;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             letter-spacing: 0.2em;
-            color: var(--jade-core);
+            color: rgba(255,255,255,0.5);
+            background: rgba(0,0,0,0.3);
+            padding: 0.5rem 0.75rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-content {
+            padding: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 500;
             margin-bottom: 0.5rem;
         }
 
-        .success-item:nth-child(2) .success-number { color: var(--violet); }
-        .success-item:nth-child(3) .success-number { color: var(--ember); }
-
-        .success-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2rem;
-            margin-bottom: 1rem;
+        .card-desc {
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-bottom: 1.5rem;
         }
 
-        .success-desc {
-            color: var(--silver);
-            max-width: 500px;
-        }
-
-        /* Dashboard Preview */
-        .dashboard-section {
-            background: var(--void);
-            padding: 10rem 4rem;
-        }
-
-        .dashboard-mockup {
-            position: relative;
-            background: var(--deep);
-            border: 1px solid rgba(0, 212, 170, 0.2);
-            padding: 2rem;
-            margin-top: 4rem;
-        }
-
-        .dashboard-header {
+        .card-tags {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            margin-bottom: 2rem;
-        }
-
-        .dashboard-title {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--jade-core);
-        }
-
-        .dashboard-status {
-            display: flex;
-            align-items: center;
+            flex-wrap: wrap;
             gap: 0.5rem;
-            font-family: 'Space Mono', monospace;
-            font-size: 0.65rem;
-            color: var(--jade-core);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
         }
 
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--jade-core);
-            border-radius: 50%;
-            animation: pulse-status 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse-status {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-        }
-
-        .dashboard-metric {
-            padding: 1.5rem;
-            background: var(--abyss);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-        }
-
-        .metric-label {
+        .tag {
             font-family: 'Space Mono', monospace;
             font-size: 0.6rem;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: var(--mercury);
-            margin-bottom: 0.75rem;
+            padding: 0.4rem 0.75rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            color: var(--muted);
         }
 
-        .metric-value {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2rem;
-            font-weight: 400;
+        .card-arrow {
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            transition: all 0.3s ease;
         }
 
-        .metric-value.positive { color: var(--jade-core); }
-        .metric-value.negative { color: var(--ember); }
-
-        /* CTA Section */
-        .cta-section {
-            background: 
-                radial-gradient(ellipse 80% 60% at 50% 100%, rgba(0, 212, 170, 0.15) 0%, transparent 60%),
-                var(--abyss);
-            text-align: center;
-            padding: 12rem 4rem;
+        .card:hover .card-arrow {
+            background: var(--jade);
+            border-color: var(--jade);
+            color: var(--bg);
         }
 
-        .cta-title {
-            font-size: clamp(2.5rem, 6vw, 5rem);
-            max-width: 900px;
-            margin: 0 auto 2rem;
-        }
+        /* Unique gradients for each card */
+        .card:nth-child(1) .card-gradient { background: linear-gradient(135deg, #050508 0%, #00d4aa33 50%, #8b5cf633 100%); }
+        .card:nth-child(2) .card-gradient { background: linear-gradient(135deg, #1a1a1a 0%, #333 50%, #ff2d2d22 100%); }
+        .card:nth-child(3) .card-gradient { background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #f5f0eb22 100%); }
+        .card:nth-child(4) .card-gradient { background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #D4AF3733 100%); }
+        .card:nth-child(5) .card-gradient { background: linear-gradient(135deg, #f8f5ff 0%, #fff5f8 50%, #f0fff8 100%); }
+        .card:nth-child(6) .card-gradient { background: linear-gradient(135deg, #0a0a12 0%, #00ffff15 30%, #ff00ff15 70%, #0a0a12 100%); }
+        .card:nth-child(7) .card-gradient { background: linear-gradient(135deg, #fff 0%, #f8f8f8 50%, #1a4d3e11 100%); }
+        .card:nth-child(8) .card-gradient { background: linear-gradient(135deg, #0d0d1a 0%, #1a0a2e 50%, #2a1a4a 100%); }
 
-        .cta-text {
-            font-size: 1.25rem;
-            color: var(--silver);
-            max-width: 600px;
-            margin: 0 auto 3rem;
-        }
-
-        /* Footer */
         footer {
             padding: 4rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            border-top: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .footer-left {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        .footer-logo {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.25rem;
-            letter-spacing: 0.2em;
-        }
-
-        .footer-tagline {
+        .footer-text {
             font-family: 'Space Mono', monospace;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
+            color: var(--muted);
             letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--mercury);
-        }
-
-        .footer-right {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.65rem;
-            color: var(--mercury);
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .pilot-grid,
-            .why-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .risk-grid,
-            .arch-features {
-                grid-template-columns: 1fr;
-            }
-
-            .dashboard-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .stats-bar {
-                display: none;
-            }
-
-            .impossible-shape {
-                opacity: 0.3;
-                right: 0;
-            }
         }
 
         @media (max-width: 768px) {
-            section,
-            .hero {
-                padding: 4rem 2rem;
+            header, main, footer {
+                padding-left: 2rem;
+                padding-right: 2rem;
             }
 
-            .nav {
-                padding: 1.5rem 2rem;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .dashboard-grid {
+            .grid {
                 grid-template-columns: 1fr;
             }
 
             footer {
                 flex-direction: column;
-                gap: 2rem;
+                gap: 1rem;
                 text-align: center;
             }
+        }
 
-            .footer-left {
-                flex-direction: column;
+        /* Animations */
+        .card {
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeUp 0.8s ease forwards;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.15s; }
+        .card:nth-child(3) { animation-delay: 0.2s; }
+        .card:nth-child(4) { animation-delay: 0.25s; }
+        .card:nth-child(5) { animation-delay: 0.3s; }
+        .card:nth-child(6) { animation-delay: 0.35s; }
+        .card:nth-child(7) { animation-delay: 0.4s; }
+        .card:nth-child(8) { animation-delay: 0.45s; }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
+        }
+
+        .intro {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 0.8s ease forwards;
         }
     </style>
 </head>
 <body>
-    <div class="cursor-glow" id="cursor"></div>
     <div class="noise"></div>
 
-    <!-- Navigation -->
-    <nav class="nav">
+    <header>
         <div class="logo">JADEFI</div>
-        <div class="nav-links">
-            <a href="#architecture">Architecture</a>
-            <a href="#pilot">The Pilot</a>
-            <a href="#risk">Risk Controls</a>
-            <a href="#criteria">Criteria</a>
-        </div>
-    </nav>
+        <div class="tagline">Disciplined Capital Deployment</div>
+    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-bg"></div>
-        
-        <!-- Geometric decorations -->
-        <div class="geometry geo-1"></div>
-        <div class="geometry geo-2"></div>
-        <div class="geometry geo-3"></div>
-        <div class="geometry geo-4"></div>
-        
-        <!-- Impossible shape -->
-        <div class="impossible-shape">
-            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M100 20 L180 160 L20 160 Z" stroke="url(#grad1)" stroke-width="0.5" fill="none" opacity="0.6"/>
-                <path d="M100 40 L160 150 L40 150 Z" stroke="url(#grad2)" stroke-width="0.5" fill="none" opacity="0.4"/>
-                <path d="M100 60 L140 140 L60 140 Z" stroke="url(#grad1)" stroke-width="0.5" fill="none" opacity="0.3"/>
-                <circle cx="100" cy="100" r="80" stroke="url(#grad2)" stroke-width="0.3" fill="none" opacity="0.2"/>
-                <circle cx="100" cy="100" r="60" stroke="url(#grad1)" stroke-width="0.3" fill="none" opacity="0.3"/>
-                <circle cx="100" cy="100" r="40" stroke="url(#grad2)" stroke-width="0.3" fill="none" opacity="0.4"/>
-                <defs>
-                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#00d4aa"/>
-                        <stop offset="100%" style="stop-color:#8b5cf6"/>
-                    </linearGradient>
-                    <linearGradient id="grad2" x1="100%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" style="stop-color:#8b5cf6"/>
-                        <stop offset="100%" style="stop-color:#ff6b4a"/>
-                    </linearGradient>
-                </defs>
-            </svg>
+    <main>
+        <div class="intro">
+            <h1>8 Visions, <span>One Platform</span></h1>
+            <p>Explore different aesthetic directions for the JadeFi investor experience. Each design maintains the same core content while expressing a unique visual identity.</p>
         </div>
 
-        <div class="hero-content">
-            <div class="hero-label">
-                <span>Disciplined Capital Deployment</span>
-            </div>
-            <h1 class="hero-title display">
-                <span class="line"><span class="word">Precision</span></span>
-                <span class="line"><span class="word">Before</span></span>
-                <span class="line"><span class="word"><em>Expansion</em></span></span>
-            </h1>
-            <p class="hero-text">
-                A function-first financial platform built on strict risk architecture. 
-                We validate systems with real capital before scaling. No projections. 
-                No promises. Only measurable performance.
-            </p>
-            <div class="hero-cta">
-                <a href="#pilot" class="btn-primary">
-                    View the Pilot
+        <div class="grid">
+            <a href="v1.html" class="card">
+                <div class="card-preview">
+                    <div class="card-gradient"></div>
+                    <div class="card-number">01</div>
+                </div>
+                <div class="card-content">
+                    <h2 class="card-title">Hypnotic Precision</h2>
+                    <p class="card-desc">Dark immersive void with iridescent jade accents. Floating geometries, impossible shapes, cursor-following glow.</p>
+                    <div class="card-tags">
+                        <span class="tag">Dark</span>
+                        <span class="tag">Geometric</span>
+                        <span class="tag">Surreal</span>
+                    </div>
+                </div>
+                <div class="card-arrow">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5"/>
                     </svg>
-                </a>
-                <a href="#architecture" class="btn-secondary">
-                    Explore Architecture
-                    <svg viewBox="0 0 16 16" fill="none">
+                </div>
+            </a>
+
+            <a href="v2.html" class="card">
+                <div class="card-preview">
+                    <div class="card-gradient"></div>
+                    <div class="card-number">02</div>
+                </div>
+                <div class="card-content">
+                    <h2 class="card-title">Brutalist Concrete</h2>
+                    <p class="card-desc">Raw industrial power. Exposed grid structure, heavy typography, harsh contrasts. Architecture as interface.</p>
+                    <div class="card-tags">
+                        <span class="tag">Brutalist</span>
+                        <span class="tag">Industrial</span>
+                        <span class="tag">Raw</span>
+                    </div>
+                </div>
+                <div class="card-arrow">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5"/>
                     </svg>
-                </a>
-            </div>
-        </div>
+                </div>
+            </a>
 
-        <div class="scroll-indicator">
-            <div class="scroll-line"></div>
-        </div>
-
-        <div class="stats-bar">
-            <div class="stat">
-                <div class="stat-value">$25<span>K</span></div>
-                <div class="stat-label">Total Deployment</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">30-60<span>d</span></div>
-                <div class="stat-label">Evaluation Window</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">~10<span>%</span></div>
-                <div class="stat-label">Target Return</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Why Section -->
-    <section class="why-section">
-        <div class="section-header">
-            <div class="section-label">
-                <span>The Thesis</span>
-            </div>
-            <h2 class="section-title display">Why This <em>Pilot</em></h2>
-            <p class="section-text">
-                Simulations lie. Backtests are fiction. Only real capital in live markets 
-                reveals the truth about a system's edge.
-            </p>
-        </div>
-
-        <div class="why-grid">
-            <div class="why-card">
-                <div class="why-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <circle cx="12" cy="12" r="10"/>
-                        <path d="M12 6v6l4 2"/>
+            <a href="v3.html" class="card">
+                <div class="card-preview">
+                    <div class="card-gradient"></div>
+                    <div class="card-number">03</div>
+                </div>
+                <div class="card-content">
+                    <h2 class="card-title">Liquid Noir</h2>
+                    <p class="card-desc">Pure black and white elegance. Morphing liquid shapes, ink-in-water effects, film noir atmosphere.</p>
+                    <div class="card-tags">
+                        <span class="tag">Monochrome</span>
+                        <span class="tag">Fluid</span>
+                        <span class="tag">Cinematic</span>
+                    </div>
+                </div>
+                <div class="card-arrow">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5"/>
                     </svg>
                 </div>
-                <h3 class="why-title">Narrow Scope, Clean Signal</h3>
-                <p class="why-desc">
-                    By limiting the pilot to 1-2 highly liquid markets, we eliminate noise 
-                    and focus on execution quality. Constraint reveals truth.
-                </p>
-            </div>
-            <div class="why-card">
-                <div class="why-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                        <path d="M2 17l10 5 10-5"/>
-                        <path d="M2 12l10 5 10-5"/>
+            </a>
+
+            <a href="v4.html" class="card">
+                <div class="card-preview">
+                    <div class="card-gradient"></div>
+                    <div class="card-number">04</div>
+                </div>
+                <div class="card-content">
+                    <h2 class="card-title">Neo Art Deco</h2>
+                    <p class="card-desc">1920s luxury meets modern finance. Rich gold on deep navy, geometric sunbursts, Gatsby-era opulence.</p>
+                    <div class="card-tags">
+                        <span class="tag">Luxury</span>
+                        <span class="tag">Gold</span>
+                        <span class="tag">Timeless</span>
+                    </div>
+                </div>
+                <div class="card-arrow">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5"/>
                     </svg>
                 </div>
-                <h3 class="why-title">Real Capital, Real Feedback</h3>
-                <p class="why-desc">
-                    Live deployment exposes edge cases, latency issues, and execution 
-                    gaps that paper trading cannot replicate.
-                </p>
-            </div>
-            <div class="why-card">
-                <div class="why-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </a>
+
+            <a href="v5.html" class="card">
+                <div class="card-preview">
+                    <div class="card-gradient"></div>
+                    <div class="card-number">05</div>
+                </div>
+                <div class="card-content">
+                    <h2 class="card-title">Soft Ethereal</h2>
+                    <p class="card-desc">Dreamlike pastels and floating elements. Glassmorphism, gentle animations, calming professionalism.</p>
+                    <div class="card-tags">
+                        <span class="tag">Light</span>
+                        <span class="tag">Pastel</span>
+                        <span class="tag">Airy</span>
+                    </div>
+                </div>
+                <div class="card-arrow">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5"/>
                     </svg>
                 </div>
-                <h3 class="why-title">Risk-First Architecture</h3>
-                <p class="why-desc">
-                    Hard position limits and drawdown caps are embedded at the system level. 
-                    Not guidelines—automated constraints.
-                </p>
-            </div>
-            <div class="why-card">
-                <div class="why-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                        <polyline points="22 4 12 14.01 9 11.01"/>
+            </a>
+
+            <a href="v6.html" class="card">
+                <div class="card-preview">
+                    <div class="card-gradient"></div>
+                    <div class="card-number">06</div>
+                </div>
+                <div class="card-content">
+                    <h2 class="card-title">Cyberpunk Terminal</h2>
+                    <p class="card-desc">Neon-soaked hacker interface. Matrix rain, glitch effects, CRT scanlines, terminal aesthetics.</p>
+                    <div class="card-tags">
+                        <span class="tag">Neon</span>
+                        <span class="tag">Glitch</span>
+                        <span class="tag">Terminal</span>
+                    </div>
+                </div>
+                <div class="card-arrow">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5"/>
                     </svg>
                 </div>
-                <h3 class="why-title">Scale Only After Proof</h3>
-                <p class="why-desc">
-                    Expansion is contingent on measurable performance. If the system 
-                    fails to meet objectives, we do not proceed. Period.
-                </p>
-            </div>
-        </div>
-    </section>
+            </a>
 
-    <!-- Architecture Section -->
-    <section class="arch-section" id="architecture">
-        <div class="section-header">
-            <div class="section-label">
-                <span>Platform Architecture</span>
-            </div>
-            <h2 class="section-title display">Built for <em>Transparency</em></h2>
-            <p class="section-text">
-                A modular, risk-constrained architecture where every component 
-                is designed to fail safely with hard limits enforced at the infrastructure level.
-            </p>
-        </div>
-
-        <div class="arch-visual">
-            <div class="arch-connector conn-1"></div>
-            <div class="arch-connector conn-2"></div>
-            <div class="arch-connector conn-3"></div>
-            
-            <div class="arch-layer arch-layer-1">
-                <div class="arch-layer-name">Layer 01</div>
-                <div class="arch-layer-title">Investor Dashboard</div>
-            </div>
-            <div class="arch-layer arch-layer-2">
-                <div class="arch-layer-name">Layer 02</div>
-                <div class="arch-layer-title">Risk Management</div>
-            </div>
-            <div class="arch-layer arch-layer-3">
-                <div class="arch-layer-name">Layer 03</div>
-                <div class="arch-layer-title">Execution Engine</div>
-            </div>
-            <div class="arch-layer arch-layer-4">
-                <div class="arch-layer-name">Core</div>
-                <div class="arch-layer-title">Market Interface</div>
-            </div>
-        </div>
-
-        <div class="arch-features">
-            <div class="arch-feature">
-                <h4 class="arch-feature-title">Execution Layer</h4>
-                <p class="arch-feature-desc">
-                    Rule-based logic with no human discretion during live execution. 
-                    Position sizing calculated dynamically from predefined risk parameters.
-                </p>
-            </div>
-            <div class="arch-feature">
-                <h4 class="arch-feature-title">Risk Management</h4>
-                <p class="arch-feature-desc">
-                    Drawdown caps enforced automatically. System halts all trading 
-                    if losses reach threshold, requiring manual review before resumption.
-                </p>
-            </div>
-            <div class="arch-feature">
-                <h4 class="arch-feature-title">Real-Time Transparency</h4>
-                <p class="arch-feature-desc">
-                    Read-only dashboard with live access to positions, trades, and 
-                    performance metrics. Transparency is not optional—it's embedded.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pilot Section -->
-    <section class="pilot-section" id="pilot">
-        <div class="section-header">
-            <div class="section-label">
-                <span>The Pilot</span>
-            </div>
-            <h2 class="section-title display">Capital <em>Deployment</em></h2>
-            <p class="section-text">
-                Not a fundraising round. A proof-of-concept deployment with 
-                clearly defined success criteria.
-            </p>
-        </div>
-
-        <div class="pilot-grid">
-            <div class="pilot-details">
-                <div class="pilot-amount">
-                    <span class="pilot-value">$25,000</span>
-                    <span class="pilot-currency">USD</span>
+            <a href="v7.html" class="card">
+                <div class="card-preview">
+                    <div class="card-gradient"></div>
+                    <div class="card-number">07</div>
                 </div>
-                <div class="pilot-breakdown">
-                    <div class="pilot-item">
-                        <div class="pilot-item-label">Build Capital</div>
-                        <div class="pilot-item-value">$15,000</div>
-                    </div>
-                    <div class="pilot-item">
-                        <div class="pilot-item-label">Test Capital</div>
-                        <div class="pilot-item-value">$10,000</div>
-                    </div>
-                    <div class="pilot-item">
-                        <div class="pilot-item-label">Time to Deploy</div>
-                        <div class="pilot-item-value">~4 weeks</div>
-                    </div>
-                    <div class="pilot-item">
-                        <div class="pilot-item-label">Evaluation Window</div>
-                        <div class="pilot-item-value">30-60 days</div>
-                    </div>
-                    <div class="pilot-item">
-                        <div class="pilot-item-label">Target Return</div>
-                        <div class="pilot-item-value">~10%</div>
+                <div class="card-content">
+                    <h2 class="card-title">Editorial Minimal</h2>
+                    <p class="card-desc">Magazine-inspired sophistication. Typography-obsessed, stark black and white, premium publication feel.</p>
+                    <div class="card-tags">
+                        <span class="tag">Minimal</span>
+                        <span class="tag">Editorial</span>
+                        <span class="tag">Clean</span>
                     </div>
                 </div>
-            </div>
+                <div class="card-arrow">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                </div>
+            </a>
 
-            <div class="pilot-params">
-                <div class="pilot-params-title">What Is Being Tested</div>
-                <div class="param-list">
-                    <div class="param">
-                        <div class="param-marker"></div>
-                        <div class="param-text">Automated trading engine in 1–2 highly liquid markets</div>
+            <a href="v8.html" class="card">
+                <div class="card-preview">
+                    <div class="card-gradient"></div>
+                    <div class="card-number">08</div>
+                </div>
+                <div class="card-content">
+                    <h2 class="card-title">Cosmic Abstract</h2>
+                    <p class="card-desc">Deep space nebulae and orbital mechanics. Aurora gradients, star fields, infinite possibility.</p>
+                    <div class="card-tags">
+                        <span class="tag">Space</span>
+                        <span class="tag">Abstract</span>
+                        <span class="tag">Visionary</span>
                     </div>
-                    <div class="param">
-                        <div class="param-marker"></div>
-                        <div class="param-text">Rule-based execution with no discretionary intervention</div>
-                    </div>
-                    <div class="param">
-                        <div class="param-marker"></div>
-                        <div class="param-text">Hard risk limits including position sizing and drawdown caps</div>
-                    </div>
-                    <div class="param">
-                        <div class="param-marker"></div>
-                        <div class="param-text">Read-only investor dashboard with real-time transparency</div>
-                    </div>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Risk Section -->
-    <section class="risk-section" id="risk">
-        <div class="section-header">
-            <div class="section-label">
-                <span>Risk Architecture</span>
-            </div>
-            <h2 class="section-title display">Capital <em>Preservation</em></h2>
-            <p class="section-text">
-                Risk management is not a feature—it is the foundation. Every decision 
-                prioritizes preservation over aggressive returns.
-            </p>
-        </div>
-
-        <div class="risk-grid">
-            <div class="risk-card">
-                <div class="risk-number">01</div>
-                <h3 class="risk-title">Position Sizing Limits</h3>
-                <p class="risk-desc">
-                    No single position exceeds predefined percentage of total capital. 
-                    Prevents concentration risk and catastrophic loss.
-                </p>
-            </div>
-            <div class="risk-card">
-                <div class="risk-number">02</div>
-                <h3 class="risk-title">Drawdown Caps</h3>
-                <p class="risk-desc">
-                    Portfolio losses at maximum threshold trigger automatic suspension. 
-                    System requires manual review before resuming.
-                </p>
-            </div>
-            <div class="risk-card">
-                <div class="risk-number">03</div>
-                <h3 class="risk-title">Market Selection</h3>
-                <p class="risk-desc">
-                    Pilot focuses on highly liquid markets with tight spreads and deep 
-                    order books. Minimizes slippage and execution risk.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Success Criteria Section -->
-    <section class="success-section" id="criteria">
-        <div class="section-header">
-            <div class="section-label">
-                <span>Success Criteria</span>
-            </div>
-            <h2 class="section-title display">Measurable <em>Outcomes</em></h2>
-            <p class="section-text">
-                The pilot is evaluated on objective metrics, not subjective assessments.
-            </p>
-        </div>
-
-        <div class="success-timeline">
-            <div class="success-item">
-                <div class="success-number">CRITERION 01</div>
-                <h3 class="success-title">System Uptime & Reliability</h3>
-                <p class="success-desc">
-                    Trading engine must operate without unplanned downtime or execution 
-                    failures. Repeated failures disqualify the pilot.
-                </p>
-            </div>
-            <div class="success-item">
-                <div class="success-number">CRITERION 02</div>
-                <h3 class="success-title">Risk Limit Adherence</h3>
-                <p class="success-desc">
-                    All trades must comply with predefined position sizing and drawdown caps. 
-                    A single violation constitutes failure, regardless of profitability.
-                </p>
-            </div>
-            <div class="success-item">
-                <div class="success-number">CRITERION 03</div>
-                <h3 class="success-title">Performance Target</h3>
-                <p class="success-desc">
-                    Target return of approximately 10% over evaluation period. This is an 
-                    objective, not a guarantee. Below-threshold performance does not automatically 
-                    disqualify if other criteria are met.
-                </p>
-            </div>
-            <div class="success-item">
-                <div class="success-number">CRITERION 04</div>
-                <h3 class="success-title">Operational Transparency</h3>
-                <p class="success-desc">
-                    Dashboard must provide accurate, real-time data throughout pilot. 
-                    Any discrepancies are grounds for immediate termination.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Dashboard Preview -->
-    <section class="dashboard-section">
-        <div class="section-header">
-            <div class="section-label">
-                <span>Investor Dashboard</span>
-            </div>
-            <h2 class="section-title display">Real-Time <em>Visibility</em></h2>
-            <p class="section-text">
-                Complete transparency through immutable, read-only access to all 
-                system activity.
-            </p>
-        </div>
-
-        <div class="dashboard-mockup">
-            <div class="dashboard-header">
-                <div class="dashboard-title">JadeFi Investor Portal</div>
-                <div class="dashboard-status">
-                    <div class="status-dot"></div>
-                    System Active
+                <div class="card-arrow">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
                 </div>
-            </div>
-            <div class="dashboard-grid">
-                <div class="dashboard-metric">
-                    <div class="metric-label">Portfolio Value</div>
-                    <div class="metric-value">$10,847</div>
-                </div>
-                <div class="dashboard-metric">
-                    <div class="metric-label">Daily P&L</div>
-                    <div class="metric-value positive">+$127</div>
-                </div>
-                <div class="dashboard-metric">
-                    <div class="metric-label">Total Return</div>
-                    <div class="metric-value positive">+8.47%</div>
-                </div>
-                <div class="dashboard-metric">
-                    <div class="metric-label">Max Drawdown</div>
-                    <div class="metric-value negative">-2.3%</div>
-                </div>
-            </div>
+            </a>
         </div>
-    </section>
+    </main>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <h2 class="section-title display cta-title">
-            This is not a pitch.<br>
-            This is an <em>operational test.</em>
-        </h2>
-        <p class="cta-text">
-            The platform is built. The risk controls are in place. The execution logic is defined. 
-            We're asking one question: does this system perform as designed under real market conditions?
-        </p>
-        <a href="mailto:invest@jadefi.io" class="btn-primary">
-            Begin Conversation
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5"/>
-            </svg>
-        </a>
-    </section>
-
-    <!-- Footer -->
     <footer>
-        <div class="footer-left">
-            <div class="footer-logo">JADEFI</div>
-            <div class="footer-tagline">Competence before expansion.</div>
-        </div>
-        <div class="footer-right">
-            © 2026 JadeFi. Disciplined Capital Deployment.
-        </div>
+        <div class="footer-text">© 2026 JadeFi — Disciplined Capital Deployment</div>
+        <div class="footer-text">Competence before expansion.</div>
     </footer>
-
-    <script>
-        // Cursor glow effect
-        const cursor = document.getElementById('cursor');
-        let mouseX = 0, mouseY = 0;
-        let cursorX = 0, cursorY = 0;
-
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
-
-        function animateCursor() {
-            cursorX += (mouseX - cursorX) * 0.1;
-            cursorY += (mouseY - cursorY) * 0.1;
-            cursor.style.left = cursorX + 'px';
-            cursor.style.top = cursorY + 'px';
-            requestAnimationFrame(animateCursor);
-        }
-        animateCursor();
-
-        // Intersection Observer for scroll animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.why-card, .arch-layer, .arch-feature, .risk-card, .success-item, .dashboard-metric').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(el);
-        });
-
-        // Staggered animation delays
-        document.querySelectorAll('.why-card').forEach((card, i) => {
-            card.style.transitionDelay = `${i * 0.1}s`;
-        });
-
-        document.querySelectorAll('.risk-card').forEach((card, i) => {
-            card.style.transitionDelay = `${i * 0.1}s`;
-        });
-
-        document.querySelectorAll('.success-item').forEach((item, i) => {
-            item.style.transitionDelay = `${i * 0.15}s`;
-        });
-
-        document.querySelectorAll('.dashboard-metric').forEach((metric, i) => {
-            metric.style.transitionDelay = `${i * 0.1}s`;
-        });
-
-        document.querySelectorAll('.arch-layer').forEach((layer, i) => {
-            layer.style.transitionDelay = `${i * 0.15}s`;
-        });
-
-        // Smooth scroll for nav links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Parallax effect for hero elements
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const shapes = document.querySelectorAll('.geometry');
-            
-            shapes.forEach((shape, i) => {
-                const speed = 0.05 + (i * 0.02);
-                shape.style.transform = `translateY(${scrolled * speed}px)`;
-            });
-        });
-    </script>
 </body>
 </html>

@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JadeFi // Disciplined Capital Deployment Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #00FFFF;
+            --magenta: #FF00FF;
+            --green: #00FF00;
+            --dark-bg: #0a0a0f;
+            --darker-bg: #050508;
+            --panel-bg: rgba(10, 10, 20, 0.85);
+            --border-glow: rgba(0, 255, 255, 0.3);
+            --text-dim: rgba(0, 255, 255, 0.6);
+            --scanline-opacity: 0.03;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Fira Code', 'JetBrains Mono', monospace;
+            background: var(--dark-bg);
+            color: var(--cyan);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* CRT Scanlines */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0) 0px,
+                rgba(0, 0, 0, 0) 1px,
+                rgba(0, 0, 0, var(--scanline-opacity)) 1px,
+                rgba(0, 0, 0, var(--scanline-opacity)) 2px
+            );
+        }
+
+        .scanlines::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.3) 100%);
+        }
+
+        /* Screen Flicker */
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            92% { opacity: 1; }
+            93% { opacity: 0.8; }
+            94% { opacity: 1; }
+            97% { opacity: 0.9; }
+            98% { opacity: 1; }
+        }
+
+        .screen-container {
+            animation: flicker 8s infinite;
+        }
+
+        /* Matrix Rain Canvas */
+        #matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.15;
+        }
+
+        /* Glitch Effect */
+        @keyframes glitch {
+            0%, 100% { 
+                text-shadow: 
+                    2px 0 var(--magenta), 
+                    -2px 0 var(--cyan);
+                transform: translate(0);
+            }
+            20% { 
+                text-shadow: 
+                    -2px 0 var(--magenta), 
+                    2px 0 var(--cyan);
+                transform: translate(-2px, 1px);
+            }
+            40% { 
+                text-shadow: 
+                    2px 0 var(--magenta), 
+                    -2px 0 var(--cyan);
+                transform: translate(2px, -1px);
+            }
+            60% { 
+                text-shadow: 
+                    -1px 0 var(--magenta), 
+                    1px 0 var(--cyan);
+                transform: translate(-1px, 0);
+            }
+            80% { 
+                text-shadow: 
+                    1px 0 var(--magenta), 
+                    -1px 0 var(--cyan);
+                transform: translate(1px, 1px);
+            }
+        }
+
+        @keyframes glitch-intense {
+            0%, 100% { 
+                clip-path: inset(0 0 0 0);
+                transform: translate(0);
+            }
+            5% { 
+                clip-path: inset(10% 0 60% 0);
+                transform: translate(-5px, 0);
+            }
+            10% { 
+                clip-path: inset(40% 0 30% 0);
+                transform: translate(5px, 0);
+            }
+            15% { 
+                clip-path: inset(80% 0 5% 0);
+                transform: translate(-3px, 0);
+            }
+            20%, 100% { 
+                clip-path: inset(0 0 0 0);
+                transform: translate(0);
+            }
+        }
+
+        /* Neon Glow */
+        .neon-cyan {
+            color: var(--cyan);
+            text-shadow: 
+                0 0 5px var(--cyan),
+                0 0 10px var(--cyan),
+                0 0 20px var(--cyan),
+                0 0 40px var(--cyan);
+        }
+
+        .neon-magenta {
+            color: var(--magenta);
+            text-shadow: 
+                0 0 5px var(--magenta),
+                0 0 10px var(--magenta),
+                0 0 20px var(--magenta),
+                0 0 40px var(--magenta);
+        }
+
+        .neon-green {
+            color: var(--green);
+            text-shadow: 
+                0 0 5px var(--green),
+                0 0 10px var(--green),
+                0 0 20px var(--green),
+                0 0 40px var(--green);
+        }
+
+        /* Blinking Cursor */
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 12px;
+            height: 1.2em;
+            background: var(--cyan);
+            animation: blink 1s infinite;
+            vertical-align: middle;
+            margin-left: 4px;
+            box-shadow: 0 0 10px var(--cyan);
+        }
+
+        /* Typing Animation */
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        .typing-text {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 3px solid var(--cyan);
+            animation: 
+                typing 2s steps(40) forwards,
+                blink 0.75s step-end infinite;
+            animation-delay: 0.5s;
+            width: 0;
+        }
+
+        /* Header */
+        header {
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border-glow);
+            background: linear-gradient(180deg, rgba(0,255,255,0.05) 0%, transparent 100%);
+            position: relative;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+        }
+
+        .logo span {
+            color: var(--magenta);
+        }
+
+        .system-status {
+            display: flex;
+            gap: 30px;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 10px var(--green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.2); }
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(255,0,255,0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 50%, rgba(0,255,255,0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        /* ASCII Art */
+        .ascii-border {
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            line-height: 1;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .main-title {
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 700;
+            letter-spacing: 15px;
+            margin-bottom: 10px;
+            animation: glitch 5s infinite;
+            position: relative;
+        }
+
+        .main-title::before,
+        .main-title::after {
+            content: 'JADEFI';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .main-title::before {
+            color: var(--magenta);
+            animation: glitch-intense 3s infinite;
+            z-index: -1;
+        }
+
+        .main-title::after {
+            color: var(--cyan);
+            animation: glitch-intense 3s infinite reverse;
+            z-index: -2;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin-bottom: 50px;
+        }
+
+        .terminal-prompt {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .prompt-symbol {
+            color: var(--green);
+        }
+
+        .tagline {
+            font-size: 1.3rem;
+            font-weight: 500;
+            padding: 15px 30px;
+            border: 1px solid var(--magenta);
+            background: rgba(255, 0, 255, 0.1);
+            margin-top: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tagline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,0,255,0.2), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Hexagon Grid Background */
+        .hex-grid {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l26 15v30L30 60 4 45V15z' fill='none' stroke='%2300FFFF' stroke-width='1'/%3E%3C/svg%3E");
+            z-index: -1;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 80px 40px;
+            background: var(--darker-bg);
+            border-top: 1px solid var(--border-glow);
+            border-bottom: 1px solid var(--border-glow);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            color: var(--magenta);
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            letter-spacing: 6px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-glow);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+        }
+
+        .stat-card:hover {
+            border-color: var(--cyan);
+            box-shadow: 
+                0 0 20px rgba(0, 255, 255, 0.2),
+                inset 0 0 20px rgba(0, 255, 255, 0.05);
+            transform: translateY(-5px);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-label::before {
+            content: '>';
+            color: var(--green);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .stat-desc {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 100px 40px;
+            position: relative;
+        }
+
+        .terminal-window {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--darker-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background: rgba(0, 255, 255, 0.1);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border-glow);
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red { background: #ff5f57; }
+        .terminal-dot.yellow { background: #febc2e; }
+        .terminal-dot.green { background: #28c840; }
+
+        .terminal-title {
+            flex: 1;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+        }
+
+        .terminal-body {
+            padding: 30px;
+            font-size: 0.9rem;
+            line-height: 2;
+        }
+
+        .terminal-line {
+            margin-bottom: 15px;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .terminal-line:nth-child(1) { animation-delay: 0.2s; }
+        .terminal-line:nth-child(2) { animation-delay: 0.4s; }
+        .terminal-line:nth-child(3) { animation-delay: 0.6s; }
+        .terminal-line:nth-child(4) { animation-delay: 0.8s; }
+        .terminal-line:nth-child(5) { animation-delay: 1s; }
+        .terminal-line:nth-child(6) { animation-delay: 1.2s; }
+
+        .terminal-line .cmd {
+            color: var(--green);
+        }
+
+        .terminal-line .flag {
+            color: var(--magenta);
+        }
+
+        .terminal-line .value {
+            color: var(--cyan);
+        }
+
+        .terminal-line .comment {
+            color: #666;
+        }
+
+        /* Risk Controls Section */
+        .risk-section {
+            padding: 100px 40px;
+            background: linear-gradient(180deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
+        }
+
+        .risk-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .risk-card {
+            background: var(--panel-bg);
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            padding: 25px;
+            position: relative;
+        }
+
+        .risk-card::before {
+            content: '[LOCKED]';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 0.6rem;
+            color: var(--green);
+            letter-spacing: 2px;
+        }
+
+        .risk-icon {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .risk-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--magenta);
+        }
+
+        .risk-desc {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        /* Success Criteria Section */
+        .criteria-section {
+            padding: 100px 40px;
+            border-top: 1px solid var(--border-glow);
+        }
+
+        .criteria-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .criteria-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .criteria-item {
+            text-align: center;
+            padding: 30px 20px;
+            border: 1px solid var(--border-glow);
+            background: var(--panel-bg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .criteria-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 2px;
+            background: var(--green);
+            box-shadow: 0 0 10px var(--green);
+        }
+
+        .criteria-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--green);
+            margin-bottom: 10px;
+        }
+
+        .criteria-name {
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+        }
+
+        /* Data Stream Animation */
+        .data-stream {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.6rem;
+            color: rgba(0, 255, 255, 0.3);
+            writing-mode: vertical-rl;
+            letter-spacing: 5px;
+            animation: dataScroll 20s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes dataScroll {
+            0% { transform: translateY(-50%) translateY(0); }
+            100% { transform: translateY(-50%) translateY(-100px); }
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 40px;
+            border-top: 1px solid var(--border-glow);
+            text-align: center;
+            background: var(--darker-bg);
+        }
+
+        .footer-ascii {
+            font-size: 0.5rem;
+            color: var(--text-dim);
+            line-height: 1.2;
+            margin-bottom: 30px;
+            opacity: 0.5;
+        }
+
+        .footer-info {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            letter-spacing: 3px;
+        }
+
+        .footer-info span {
+            color: var(--magenta);
+        }
+
+        /* Progress Bar Animation */
+        .progress-bar {
+            width: 100%;
+            max-width: 400px;
+            height: 4px;
+            background: rgba(0, 255, 255, 0.1);
+            margin: 40px auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            box-shadow: 0 0 10px var(--cyan);
+            animation: progress 3s ease-out forwards;
+        }
+
+        @keyframes progress {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+
+        /* Chromatic Aberration on Hover */
+        .chromatic:hover {
+            animation: glitch 0.3s infinite;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .cta-box {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px;
+            border: 2px solid var(--cyan);
+            background: rgba(0, 255, 255, 0.02);
+            position: relative;
+        }
+
+        .cta-box::before,
+        .cta-box::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--magenta);
+        }
+
+        .cta-box::before {
+            top: -5px;
+            left: -5px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .cta-box::after {
+            bottom: -5px;
+            right: -5px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .cta-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            letter-spacing: 4px;
+        }
+
+        .cta-text {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            border: 1px solid var(--green);
+            background: transparent;
+            color: var(--green);
+            font-family: inherit;
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--green);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .cta-button:hover {
+            color: var(--dark-bg);
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+        }
+
+        .cta-button:hover::before {
+            left: 0;
+        }
+
+        /* Dashboard Preview */
+        .dashboard-section {
+            padding: 100px 40px;
+            background: var(--darker-bg);
+        }
+
+        .dashboard-preview {
+            max-width: 1200px;
+            margin: 40px auto 0;
+            border: 1px solid var(--border-glow);
+            background: var(--panel-bg);
+            padding: 20px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-glow);
+            margin-bottom: 20px;
+        }
+
+        .dashboard-title {
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+        }
+
+        .dashboard-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.7rem;
+            color: var(--green);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .dashboard-metric {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+
+        .metric-label {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .metric-value.positive { color: var(--green); }
+        .metric-value.neutral { color: var(--cyan); }
+        .metric-value.warning { color: #FFA500; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .system-status {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .main-title {
+                letter-spacing: 8px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .data-stream {
+                display: none;
+            }
+        }
+
+        /* Loading Animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--darker-bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-text {
+            font-size: 0.8rem;
+            color: var(--cyan);
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+
+        .loading-bar {
+            width: 200px;
+            height: 2px;
+            background: rgba(0, 255, 255, 0.2);
+            overflow: hidden;
+        }
+
+        .loading-progress {
+            height: 100%;
+            width: 0;
+            background: var(--cyan);
+            animation: loading 2s ease-out forwards;
+        }
+
+        @keyframes loading {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loader">
+        <div class="loading-text">[SYSTEM] INITIALIZING JADEFI TERMINAL...</div>
+        <div class="loading-bar">
+            <div class="loading-progress"></div>
+        </div>
+    </div>
+
+    <!-- Matrix Rain Background -->
+    <canvas id="matrix-rain"></canvas>
+
+    <!-- Scanlines Overlay -->
+    <div class="scanlines"></div>
+
+    <!-- Data Stream -->
+    <div class="data-stream">
+        0x7F3A 0x9B2C 0x4E1D 0x8F5A 0x2C7B 0x6D4E 0x1A9F 0x5B3C
+    </div>
+
+    <div class="screen-container">
+        <!-- Header -->
+        <header>
+            <div class="header-content">
+                <div class="logo chromatic">JADE<span>FI</span></div>
+                <div class="system-status">
+                    <div class="status-item">
+                        <div class="status-dot"></div>
+                        <span>SYSTEM ONLINE</span>
+                    </div>
+                    <div class="status-item">
+                        <span>BUILD: v0.1.0</span>
+                    </div>
+                    <div class="status-item">
+                        <span id="datetime">2026.02.18</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hex-grid"></div>
+            <div class="ascii-border">
+╔══════════════════════════════════════════════════════════════════╗
+║  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ║
+╚══════════════════════════════════════════════════════════════════╝
+            </div>
+            <h1 class="main-title neon-cyan">JADEFI</h1>
+            <p class="subtitle">DISCIPLINED CAPITAL DEPLOYMENT PLATFORM</p>
+            
+            <div class="terminal-prompt">
+                <span class="prompt-symbol">▶</span>
+                <span>SYSTEM READY</span>
+                <span class="cursor"></span>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+
+            <div class="tagline neon-magenta">
+                "COMPETENCE BEFORE EXPANSION"
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="section-header">
+                <div class="section-label">[CAPITAL ALLOCATION]</div>
+                <h2 class="section-title neon-cyan">DEPLOYMENT PARAMETERS</h2>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">TOTAL CAPITAL</div>
+                    <div class="stat-value neon-green">$25,000</div>
+                    <div class="stat-desc">$15K build infrastructure + $10K test capital</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">EVALUATION WINDOW</div>
+                    <div class="stat-value neon-cyan">30-60</div>
+                    <div class="stat-desc">Days of systematic performance evaluation</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">TARGET RETURN</div>
+                    <div class="stat-value neon-magenta">~10%</div>
+                    <div class="stat-desc">Conservative target with hard risk limits</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">MARKET FOCUS</div>
+                    <div class="stat-value neon-cyan">1-2</div>
+                    <div class="stat-desc">Liquid markets for automated trading execution</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <div class="section-header">
+                <div class="section-label">[SYSTEM ARCHITECTURE]</div>
+                <h2 class="section-title neon-cyan">CORE CAPABILITIES</h2>
+            </div>
+
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <div class="terminal-dot red"></div>
+                        <div class="terminal-dot yellow"></div>
+                        <div class="terminal-dot green"></div>
+                    </div>
+                    <div class="terminal-title">jadefi@terminal:~/system</div>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-line">
+                        <span class="cmd">$</span> jadefi <span class="flag">--mode</span> <span class="value">automated</span> <span class="comment"># Rule-based execution system</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="cmd">$</span> jadefi <span class="flag">--intervention</span> <span class="value">none</span> <span class="comment"># No discretionary trading</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="cmd">$</span> jadefi <span class="flag">--markets</span> <span class="value">liquid</span> <span class="comment"># High-liquidity venues only</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="cmd">$</span> jadefi <span class="flag">--dashboard</span> <span class="value">realtime</span> <span class="comment"># Live investor transparency</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="cmd">$</span> jadefi <span class="flag">--risk</span> <span class="value">hardlimit</span> <span class="comment"># Enforced position & drawdown caps</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="value">[SUCCESS]</span> System initialized. Awaiting deployment...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Risk Controls Section -->
+        <section class="risk-section">
+            <div class="section-header">
+                <div class="section-label">[RISK MANAGEMENT]</div>
+                <h2 class="section-title neon-magenta">HARD LIMITS ENFORCED</h2>
+            </div>
+
+            <div class="risk-grid">
+                <div class="risk-card">
+                    <div class="risk-icon">⬡</div>
+                    <div class="risk-title">POSITION SIZING</div>
+                    <div class="risk-desc">Maximum exposure per position strictly capped. No exceptions. No overrides. System-enforced limits.</div>
+                </div>
+
+                <div class="risk-card">
+                    <div class="risk-icon">◈</div>
+                    <div class="risk-title">DRAWDOWN CAPS</div>
+                    <div class="risk-desc">Hard stop on portfolio drawdown. Automatic position reduction triggers at predefined thresholds.</div>
+                </div>
+
+                <div class="risk-card">
+                    <div class="risk-icon">◇</div>
+                    <div class="risk-title">RULE-BASED ONLY</div>
+                    <div class="risk-desc">Zero discretionary intervention. All execution follows pre-programmed logic. Human emotion eliminated.</div>
+                </div>
+
+                <div class="risk-card">
+                    <div class="risk-icon">▣</div>
+                    <div class="risk-title">REAL-TIME MONITORING</div>
+                    <div class="risk-desc">Continuous system health checks. Instant alerts on anomalies. Full audit trail maintained.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Preview -->
+        <section class="dashboard-section">
+            <div class="section-header">
+                <div class="section-label">[INVESTOR ACCESS]</div>
+                <h2 class="section-title neon-cyan">REAL-TIME DASHBOARD</h2>
+            </div>
+
+            <div class="dashboard-preview">
+                <div class="dashboard-header">
+                    <div class="dashboard-title">JADEFI // LIVE METRICS</div>
+                    <div class="dashboard-status">
+                        <div class="status-dot"></div>
+                        CONNECTED
+                    </div>
+                </div>
+                <div class="dashboard-grid">
+                    <div class="dashboard-metric">
+                        <div class="metric-label">SYSTEM UPTIME</div>
+                        <div class="metric-value positive">99.9%</div>
+                    </div>
+                    <div class="dashboard-metric">
+                        <div class="metric-label">RISK STATUS</div>
+                        <div class="metric-value positive">NOMINAL</div>
+                    </div>
+                    <div class="dashboard-metric">
+                        <div class="metric-label">OPEN POSITIONS</div>
+                        <div class="metric-value neutral">2</div>
+                    </div>
+                    <div class="dashboard-metric">
+                        <div class="metric-label">DAILY P&L</div>
+                        <div class="metric-value positive">+0.34%</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Success Criteria Section -->
+        <section class="criteria-section">
+            <div class="section-header">
+                <div class="section-label">[EVALUATION METRICS]</div>
+                <h2 class="section-title neon-green">SUCCESS CRITERIA</h2>
+            </div>
+
+            <div class="criteria-container">
+                <div class="criteria-list">
+                    <div class="criteria-item">
+                        <div class="criteria-number">01</div>
+                        <div class="criteria-name">UPTIME</div>
+                    </div>
+                    <div class="criteria-item">
+                        <div class="criteria-number">02</div>
+                        <div class="criteria-name">RISK ADHERENCE</div>
+                    </div>
+                    <div class="criteria-item">
+                        <div class="criteria-number">03</div>
+                        <div class="criteria-name">PERFORMANCE</div>
+                    </div>
+                    <div class="criteria-item">
+                        <div class="criteria-number">04</div>
+                        <div class="criteria-name">TRANSPARENCY</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="cta-box">
+                <h2 class="cta-title neon-cyan">INITIATE PROTOCOL</h2>
+                <p class="cta-text">
+                    JadeFi represents disciplined capital deployment with unwavering commitment to risk management and transparency. 
+                    Every trade is systematic. Every limit is enforced. Every metric is visible.
+                </p>
+                <button class="cta-button">
+                    REQUEST ACCESS_
+                </button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-ascii">
+    ██╗ █████╗ ██████╗ ███████╗███████╗██╗
+    ██║██╔══██╗██╔══██╗██╔════╝██╔════╝██║
+    ██║███████║██║  ██║█████╗  █████╗  ██║
+██   ██║██╔══██║██║  ██║██╔══╝  ██╔══╝  ██║
+╚█████╔╝██║  ██║██████╔╝███████╗██║     ██║
+ ╚════╝ ╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝     ╚═╝
+            </div>
+            <div class="footer-info">
+                <span>[JADEFI]</span> // DISCIPLINED CAPITAL DEPLOYMENT // <span>2026</span>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Hide loader after page loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 2000);
+        });
+
+        // Matrix Rain Effect
+        const canvas = document.getElementById('matrix-rain');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const chars = 'JADEFI01アイウエオカキクケコサシスセソタチツテト∑∏∂∆√∞≈≠±×÷';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.random() * canvas.height / fontSize;
+        }
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(10, 10, 15, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#00FFFF';
+            ctx.font = fontSize + 'px Fira Code';
+
+            for (let i = 0; i < drops.length; i++) {
+                const char = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 50);
+
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Update datetime
+        function updateDateTime() {
+            const now = new Date();
+            const formatted = now.toISOString().slice(0, 10).replace(/-/g, '.');
+            document.getElementById('datetime').textContent = formatted;
+        }
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+
+        // Typing effect for terminal lines (intersection observer)
+        const terminalLines = document.querySelectorAll('.terminal-line');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, { threshold: 0.5 });
+
+        terminalLines.forEach(line => {
+            line.style.animationPlayState = 'paused';
+            observer.observe(line);
+        });
+
+        // Glitch effect on scroll
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const scrollPos = window.scrollY;
+                    const title = document.querySelector('.main-title');
+                    if (scrollPos > 50 && scrollPos < 500) {
+                        title.style.animation = 'glitch 0.3s infinite';
+                    } else {
+                        title.style.animation = 'glitch 5s infinite';
+                    }
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // Random data stream update
+        const dataStream = document.querySelector('.data-stream');
+        setInterval(() => {
+            let newData = '';
+            for (let i = 0; i < 8; i++) {
+                newData += '0x' + Math.floor(Math.random() * 65535).toString(16).toUpperCase().padStart(4, '0') + ' ';
+            }
+            dataStream.textContent = newData;
+        }, 2000);
+
+        // Dashboard metric animation
+        const metrics = document.querySelectorAll('.metric-value');
+        setInterval(() => {
+            const pnlElement = document.querySelector('.dashboard-metric:last-child .metric-value');
+            const variation = (Math.random() * 0.1 - 0.05).toFixed(2);
+            const newValue = (0.34 + parseFloat(variation)).toFixed(2);
+            pnlElement.textContent = newValue >= 0 ? `+${newValue}%` : `${newValue}%`;
+            pnlElement.className = 'metric-value ' + (newValue >= 0 ? 'positive' : 'warning');
+        }, 3000);
+    </script>
+</body>
+</html>

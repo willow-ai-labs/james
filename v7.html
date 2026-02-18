@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JadeFi — Disciplined Capital Deployment Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --white: #ffffff;
+            --black: #0a0a0a;
+            --accent: #1a4d3e;
+            --accent-light: #2d6a5a;
+            --rule: rgba(10, 10, 10, 0.15);
+            --rule-dark: rgba(255, 255, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 18px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--black);
+            background: var(--white);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Typography */
+        .serif {
+            font-family: 'Fraunces', Georgia, serif;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 400;
+            line-height: 1.1;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .container--narrow {
+            max-width: 900px;
+        }
+
+        /* Header */
+        header {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--rule);
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            color: var(--black);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .header-meta {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: rgba(10, 10, 10, 0.5);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 6rem 0 4rem;
+            border-bottom: 1px solid var(--rule);
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 4rem;
+        }
+
+        .hero-headline {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 300;
+            letter-spacing: -0.03em;
+            line-height: 0.95;
+            margin-bottom: 2rem;
+        }
+
+        .hero-headline em {
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            font-weight: 300;
+            color: rgba(10, 10, 10, 0.7);
+            max-width: 500px;
+            line-height: 1.6;
+        }
+
+        .hero-aside {
+            padding-top: 1rem;
+            border-left: 1px solid var(--rule);
+            padding-left: 2rem;
+        }
+
+        .hero-stat {
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-stat-value {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: var(--accent);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: rgba(10, 10, 10, 0.5);
+        }
+
+        /* Edition bar */
+        .edition-bar {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--rule);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .edition-bar span {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: rgba(10, 10, 10, 0.5);
+        }
+
+        .edition-bar .status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Pull Quote */
+        .pull-quote-section {
+            padding: 5rem 0;
+            border-bottom: 1px solid var(--rule);
+        }
+
+        .pull-quote {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 300;
+            font-style: italic;
+            text-align: center;
+            line-height: 1.3;
+            letter-spacing: -0.02em;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .pull-quote-attribution {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: rgba(10, 10, 10, 0.4);
+        }
+
+        /* Three Column Layout */
+        .columns-section {
+            padding: 4rem 0;
+            border-bottom: 1px solid var(--rule);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--rule);
+        }
+
+        .section-number {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 0.875rem;
+            color: var(--accent);
+        }
+
+        .section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: rgba(10, 10, 10, 0.5);
+        }
+
+        .three-columns {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+        }
+
+        .column {
+            padding-right: 1rem;
+        }
+
+        .column:not(:last-child) {
+            border-right: 1px solid var(--rule);
+        }
+
+        .column h3 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .column p {
+            font-size: 0.9rem;
+            color: rgba(10, 10, 10, 0.75);
+            line-height: 1.75;
+        }
+
+        .column .detail {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--rule);
+            font-size: 0.8rem;
+            color: rgba(10, 10, 10, 0.5);
+        }
+
+        .column .detail strong {
+            color: var(--black);
+            font-weight: 500;
+        }
+
+        /* Drop Cap Article */
+        .article-section {
+            padding: 5rem 0;
+            border-bottom: 1px solid var(--rule);
+        }
+
+        .article-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 4rem;
+        }
+
+        .article-meta {
+            padding-right: 2rem;
+        }
+
+        .article-meta h2 {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .article-meta .tag {
+            display: inline-block;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            padding: 0.4rem 0.8rem;
+            border: 1px solid var(--black);
+            margin-bottom: 1.5rem;
+        }
+
+        .article-content {
+            columns: 2;
+            column-gap: 3rem;
+            column-rule: 1px solid var(--rule);
+        }
+
+        .article-content p {
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .article-content p:first-of-type::first-letter {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 4.5rem;
+            float: left;
+            line-height: 0.8;
+            padding-right: 0.75rem;
+            padding-top: 0.25rem;
+            color: var(--accent);
+            font-weight: 400;
+        }
+
+        /* Reversed Section */
+        .reversed-section {
+            background: var(--black);
+            color: var(--white);
+            padding: 5rem 0;
+        }
+
+        .reversed-section .section-number {
+            color: var(--white);
+            opacity: 0.5;
+        }
+
+        .reversed-section .section-title {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .reversed-section .section-header {
+            border-bottom-color: var(--rule-dark);
+        }
+
+        .criteria-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .criteria-item {
+            padding-right: 1.5rem;
+        }
+
+        .criteria-item:not(:last-child) {
+            border-right: 1px solid var(--rule-dark);
+        }
+
+        .criteria-icon {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.6;
+        }
+
+        .criteria-item h4 {
+            font-size: 1.125rem;
+            font-weight: 400;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.01em;
+        }
+
+        .criteria-item p {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            line-height: 1.6;
+        }
+
+        /* Numbers Section */
+        .numbers-section {
+            padding: 5rem 0;
+            border-bottom: 1px solid var(--rule);
+        }
+
+        .numbers-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 0;
+        }
+
+        .number-item {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-right: 1px solid var(--rule);
+        }
+
+        .number-item:last-child {
+            border-right: none;
+        }
+
+        .number-value {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 300;
+            color: var(--black);
+            line-height: 1;
+            margin-bottom: 0.75rem;
+        }
+
+        .number-value .accent {
+            color: var(--accent);
+        }
+
+        .number-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: rgba(10, 10, 10, 0.5);
+            max-width: 120px;
+            margin: 0 auto;
+        }
+
+        /* Risk Framework */
+        .risk-section {
+            padding: 5rem 0;
+            border-bottom: 1px solid var(--rule);
+        }
+
+        .risk-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .risk-header h2 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .risk-header p {
+            font-size: 1rem;
+            color: rgba(10, 10, 10, 0.7);
+            line-height: 1.7;
+        }
+
+        .risk-list {
+            list-style: none;
+        }
+
+        .risk-list li {
+            display: grid;
+            grid-template-columns: 3rem 1fr;
+            gap: 1.5rem;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--rule);
+            align-items: start;
+        }
+
+        .risk-list li:first-child {
+            border-top: 1px solid var(--rule);
+        }
+
+        .risk-number {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 1.25rem;
+            color: var(--accent);
+        }
+
+        .risk-content h4 {
+            font-size: 1.125rem;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 0.5rem;
+        }
+
+        .risk-content p {
+            font-size: 0.875rem;
+            color: rgba(10, 10, 10, 0.65);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 0;
+            border-bottom: 1px solid var(--rule);
+        }
+
+        .cta-content {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .cta-content h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .cta-content p {
+            font-size: 1.1rem;
+            color: rgba(10, 10, 10, 0.7);
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+        }
+
+        .cta-button {
+            display: inline-block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            padding: 1.25rem 3rem;
+            background: var(--black);
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .cta-button:hover {
+            background: var(--accent);
+        }
+
+        .cta-button::after {
+            content: '→';
+            margin-left: 1rem;
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .cta-button:hover::after {
+            transform: translateX(4px);
+        }
+
+        .cta-note {
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            color: rgba(10, 10, 10, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 0;
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-logo {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .footer-logo span {
+            opacity: 0.5;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            transition: color 0.2s ease;
+            position: relative;
+        }
+
+        .footer-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--white);
+            transition: width 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--white);
+        }
+
+        .footer-links a:hover::after {
+            width: 100%;
+        }
+
+        .footer-copy {
+            font-size: 0.7rem;
+            opacity: 0.4;
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .hero-aside {
+                border-left: none;
+                padding-left: 0;
+                border-top: 1px solid var(--rule);
+                padding-top: 2rem;
+                display: flex;
+                gap: 3rem;
+            }
+
+            .three-columns {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .column:not(:last-child) {
+                border-right: none;
+                border-bottom: 1px solid var(--rule);
+                padding-bottom: 2rem;
+                padding-right: 0;
+            }
+
+            .article-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .article-content {
+                columns: 1;
+            }
+
+            .criteria-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .criteria-item:nth-child(2) {
+                border-right: none;
+            }
+
+            .criteria-item:nth-child(3),
+            .criteria-item:nth-child(4) {
+                border-top: 1px solid var(--rule-dark);
+                padding-top: 2rem;
+            }
+
+            .numbers-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .number-item:nth-child(2) {
+                border-right: none;
+            }
+
+            .number-item:nth-child(3),
+            .number-item:nth-child(4) {
+                border-top: 1px solid var(--rule);
+            }
+
+            .risk-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            html {
+                font-size: 16px;
+            }
+
+            .container {
+                padding: 0 1.25rem;
+            }
+
+            .hero {
+                padding: 4rem 0 3rem;
+            }
+
+            .hero-aside {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .criteria-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .criteria-item {
+                border-right: none !important;
+                border-bottom: 1px solid var(--rule-dark);
+                padding-bottom: 1.5rem;
+                padding-right: 0;
+            }
+
+            .criteria-item:last-child {
+                border-bottom: none;
+            }
+
+            .numbers-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .number-item {
+                border-right: none !important;
+                border-bottom: 1px solid var(--rule);
+            }
+
+            .number-item:last-child {
+                border-bottom: none;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-inner">
+                <a href="#" class="logo">Jade<span>Fi</span></a>
+                <div class="header-meta">Investor Prospectus · Q1 2026</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="edition-bar">
+        <div class="container">
+            <div class="header-inner">
+                <span>Disciplined Capital Deployment</span>
+                <div class="status">
+                    <div class="status-dot"></div>
+                    <span>Evaluation Period Open</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-main fade-in">
+                    <h1 class="hero-headline serif">
+                        Automated<br>
+                        <em>Trading</em>,<br>
+                        Disciplined<br>
+                        Execution
+                    </h1>
+                    <p class="hero-subtitle">
+                        A systematic capital deployment platform built on rule-based execution, 
+                        hard risk limits, and complete transparency.
+                    </p>
+                </div>
+                <aside class="hero-aside fade-in">
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">$25K</div>
+                        <div class="hero-stat-label">Total Capital Required</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">~10%</div>
+                        <div class="hero-stat-label">Target Return</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">30–60</div>
+                        <div class="hero-stat-label">Day Evaluation Window</div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <section class="pull-quote-section">
+        <div class="container">
+            <blockquote class="pull-quote fade-in">
+                "Competence before expansion"
+            </blockquote>
+            <p class="pull-quote-attribution">The JadeFi Philosophy</p>
+        </div>
+    </section>
+
+    <section class="columns-section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-number">01</span>
+                <span class="section-title">Capital Structure</span>
+            </div>
+            <div class="three-columns">
+                <div class="column fade-in">
+                    <h3 class="serif">Build Capital</h3>
+                    <p>
+                        Infrastructure development, system architecture, and operational 
+                        setup costs. One-time deployment ensuring production-grade reliability.
+                    </p>
+                    <div class="detail">
+                        <strong>$15,000</strong> · Non-recoverable
+                    </div>
+                </div>
+                <div class="column fade-in">
+                    <h3 class="serif">Test Capital</h3>
+                    <p>
+                        Live trading capital deployed during evaluation period. Subject to 
+                        risk management protocols and drawdown limitations.
+                    </p>
+                    <div class="detail">
+                        <strong>$10,000</strong> · At-risk capital
+                    </div>
+                </div>
+                <div class="column fade-in">
+                    <h3 class="serif">Total Position</h3>
+                    <p>
+                        Combined investment enabling complete system deployment, testing, 
+                        and initial performance validation period.
+                    </p>
+                    <div class="detail">
+                        <strong>$25,000</strong> · Full commitment
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="article-section">
+        <div class="container">
+            <div class="article-grid">
+                <div class="article-meta fade-in">
+                    <span class="tag">Methodology</span>
+                    <h2 class="serif">Rule-Based Execution</h2>
+                </div>
+                <div class="article-content fade-in">
+                    <p>
+                        The JadeFi platform operates on a foundation of systematic, rule-based execution. 
+                        Every trade decision follows predefined parameters—eliminating discretionary 
+                        intervention and the emotional biases that historically undermine trading performance. 
+                        The system focuses exclusively on one to two liquid markets, maintaining depth of 
+                        expertise rather than breadth of exposure.
+                    </p>
+                    <p>
+                        Automated trading removes the human elements that traditionally introduce 
+                        inconsistency: fear, greed, fatigue, and overconfidence. By codifying every decision 
+                        into executable rules, the platform ensures identical responses to identical market 
+                        conditions. This systematic approach enables continuous operation without the 
+                        degradation in judgment that affects human traders during extended sessions.
+                    </p>
+                    <p>
+                        Position sizing follows strict mathematical models. Drawdown caps are enforced 
+                        automatically, without exception. The system cannot be convinced, cajoled, or 
+                        pressured into exceeding its risk parameters. This architectural discipline 
+                        distinguishes JadeFi from discretionary approaches where "just this once" 
+                        exceptions lead to catastrophic outcomes.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="reversed-section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-number">02</span>
+                <span class="section-title">Success Criteria</span>
+            </div>
+            <div class="criteria-grid">
+                <div class="criteria-item fade-in">
+                    <div class="criteria-icon">◈</div>
+                    <h4 class="serif">System Uptime</h4>
+                    <p>Continuous operational availability throughout evaluation period. No unplanned outages affecting trade execution.</p>
+                </div>
+                <div class="criteria-item fade-in">
+                    <div class="criteria-icon">◇</div>
+                    <h4 class="serif">Risk Adherence</h4>
+                    <p>Zero breaches of position limits or drawdown caps. Complete compliance with predefined risk parameters.</p>
+                </div>
+                <div class="criteria-item fade-in">
+                    <div class="criteria-icon">○</div>
+                    <h4 class="serif">Performance</h4>
+                    <p>Target return achievement within acceptable variance. Risk-adjusted returns meeting or exceeding benchmarks.</p>
+                </div>
+                <div class="criteria-item fade-in">
+                    <div class="criteria-icon">□</div>
+                    <h4 class="serif">Transparency</h4>
+                    <p>Real-time investor dashboard access. Complete audit trail and position visibility at all times.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="numbers-section">
+        <div class="container">
+            <div class="numbers-grid">
+                <div class="number-item fade-in">
+                    <div class="number-value"><span class="accent">1–2</span></div>
+                    <div class="number-label">Liquid markets traded</div>
+                </div>
+                <div class="number-item fade-in">
+                    <div class="number-value">24/7</div>
+                    <div class="number-label">Automated execution</div>
+                </div>
+                <div class="number-item fade-in">
+                    <div class="number-value"><span class="accent">0</span></div>
+                    <div class="number-label">Discretionary interventions</div>
+                </div>
+                <div class="number-item fade-in">
+                    <div class="number-value">100%</div>
+                    <div class="number-label">Position transparency</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="risk-section">
+        <div class="container">
+            <div class="risk-grid">
+                <div class="risk-header fade-in">
+                    <h2 class="serif">Hard Risk<br>Limits</h2>
+                    <p>
+                        Non-negotiable constraints enforced at the system architecture level. 
+                        These limits cannot be overridden regardless of market conditions or 
+                        perceived opportunity.
+                    </p>
+                </div>
+                <ul class="risk-list fade-in">
+                    <li>
+                        <span class="risk-number">01</span>
+                        <div class="risk-content">
+                            <h4>Position Sizing</h4>
+                            <p>Maximum position size capped as percentage of total capital. No single trade can exceed predefined exposure limits.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="risk-number">02</span>
+                        <div class="risk-content">
+                            <h4>Drawdown Caps</h4>
+                            <p>Automatic position reduction or halt when cumulative losses reach threshold. Preservation of capital supersedes profit pursuit.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="risk-number">03</span>
+                        <div class="risk-content">
+                            <h4>Market Concentration</h4>
+                            <p>Operations limited to one or two highly liquid markets. No expansion into additional instruments without explicit approval.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="risk-number">04</span>
+                        <div class="risk-content">
+                            <h4>Execution Rules</h4>
+                            <p>All trades follow codified rules. Manual intervention disabled by design. System operates identically regardless of operator access.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content fade-in">
+                <h2 class="serif">Begin the Evaluation</h2>
+                <p>
+                    The 30-60 day evaluation window provides sufficient time to demonstrate 
+                    system capability while limiting extended exposure to unproven performance. 
+                    Real-time dashboard access ensures complete visibility throughout.
+                </p>
+                <a href="#" class="cta-button">Request Access</a>
+                <p class="cta-note">Evaluation period · Q1 2026</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-logo">Jade<span>Fi</span></div>
+                <div class="footer-links">
+                    <a href="#">Documentation</a>
+                    <a href="#">Dashboard</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="footer-copy">© 2026 JadeFi. All rights reserved.</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Stagger animations for grid items
+        document.querySelectorAll('.three-columns .column, .criteria-grid .criteria-item, .numbers-grid .number-item').forEach((el, index) => {
+            el.style.transitionDelay = `${index * 0.1}s`;
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JadeFi — Disciplined Capital Deployment Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,400&family=Poiret+One&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-bright: #FFD700;
+            --gold-pale: #F4E4BC;
+            --gold-dark: #B8960C;
+            --navy-deep: #0a0a1a;
+            --navy-medium: #12122a;
+            --navy-light: #1a1a3a;
+            --cream: #F5F0E6;
+            --white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            background: var(--navy-deep);
+            color: var(--cream);
+            font-weight: 300;
+            overflow-x: hidden;
+            line-height: 1.7;
+        }
+
+        /* ========== GEOMETRIC PATTERN BACKGROUNDS ========== */
+        .geo-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+        }
+
+        .geo-pattern svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ========== DECORATIVE ELEMENTS ========== */
+        .sunburst {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            opacity: 0.08;
+        }
+
+        .sunburst::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: conic-gradient(
+                from 0deg,
+                transparent 0deg,
+                var(--gold-primary) 2deg,
+                transparent 4deg,
+                transparent 10deg,
+                var(--gold-primary) 12deg,
+                transparent 14deg,
+                transparent 20deg,
+                var(--gold-primary) 22deg,
+                transparent 24deg,
+                transparent 30deg,
+                var(--gold-primary) 32deg,
+                transparent 34deg,
+                transparent 40deg,
+                var(--gold-primary) 42deg,
+                transparent 44deg,
+                transparent 50deg,
+                var(--gold-primary) 52deg,
+                transparent 54deg,
+                transparent 60deg,
+                var(--gold-primary) 62deg,
+                transparent 64deg,
+                transparent 70deg,
+                var(--gold-primary) 72deg,
+                transparent 74deg,
+                transparent 80deg,
+                var(--gold-primary) 82deg,
+                transparent 84deg,
+                transparent 90deg
+            );
+            border-radius: 50%;
+        }
+
+        /* ========== BORDER ORNAMENTS ========== */
+        .ornament-border {
+            position: relative;
+            padding: 60px 40px;
+        }
+
+        .ornament-border::before,
+        .ornament-border::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 2px;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                var(--gold-dark) 15%,
+                var(--gold-primary) 30%,
+                var(--gold-bright) 50%,
+                var(--gold-primary) 70%,
+                var(--gold-dark) 85%,
+                transparent 100%
+            );
+        }
+
+        .ornament-border::before {
+            top: 0;
+            width: 80%;
+        }
+
+        .ornament-border::after {
+            bottom: 0;
+            width: 80%;
+        }
+
+        /* ========== TYPOGRAPHY ========== */
+        h1, h2, h3 {
+            font-family: 'Poiret One', cursive;
+            font-weight: 400;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .display-text {
+            font-family: 'Bodoni Moda', serif;
+            font-style: italic;
+            letter-spacing: 0.05em;
+        }
+
+        /* ========== HEADER ========== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 25px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(180deg, var(--navy-deep) 0%, transparent 100%);
+            transition: all 0.4s ease;
+        }
+
+        header.scrolled {
+            background: rgba(10, 10, 26, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 15px 60px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .logo {
+            font-family: 'Poiret One', cursive;
+            font-size: 2rem;
+            letter-spacing: 0.3em;
+            color: var(--gold-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+        }
+
+        .logo-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: var(--gold-primary);
+            stroke-width: 1.5;
+        }
+
+        nav {
+            display: flex;
+            gap: 50px;
+        }
+
+        nav a {
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 0.85rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            position: relative;
+            padding: 5px 0;
+            transition: color 0.3s ease;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 1px;
+            background: var(--gold-primary);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        nav a:hover {
+            color: var(--gold-primary);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* ========== HERO SECTION ========== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 120px 40px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+        }
+
+        .hero-sunburst {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(
+                circle at center,
+                rgba(212, 175, 55, 0.03) 0%,
+                transparent 50%
+            );
+        }
+
+        .hero-lines {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+
+        .hero-line {
+            position: absolute;
+            background: linear-gradient(180deg, transparent, var(--gold-primary), transparent);
+            width: 1px;
+            height: 100%;
+            opacity: 0;
+            animation: lineReveal 3s ease forwards;
+        }
+
+        @keyframes lineReveal {
+            0% { opacity: 0; transform: scaleY(0); }
+            100% { opacity: 0.15; transform: scaleY(1); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+        }
+
+        .hero-emblem {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+
+        .hero-emblem svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .emblem-outer {
+            fill: none;
+            stroke: var(--gold-primary);
+            stroke-width: 1;
+            stroke-dasharray: 600;
+            stroke-dashoffset: 600;
+            animation: drawLine 2s ease forwards 0.5s;
+        }
+
+        .emblem-inner {
+            fill: none;
+            stroke: var(--gold-bright);
+            stroke-width: 0.5;
+            stroke-dasharray: 400;
+            stroke-dashoffset: 400;
+            animation: drawLine 2s ease forwards 1s;
+        }
+
+        @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .hero-pretitle {
+            font-size: 0.9rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--gold-primary);
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeUp 1s ease forwards 1.5s;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 1.1;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, var(--gold-pale) 0%, var(--gold-primary) 50%, var(--gold-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            animation: fadeUp 1s ease forwards 1.7s;
+        }
+
+        .hero-subtitle {
+            font-family: 'Bodoni Moda', serif;
+            font-style: italic;
+            font-size: 1.5rem;
+            color: var(--cream);
+            margin-bottom: 50px;
+            opacity: 0;
+            animation: fadeUp 1s ease forwards 1.9s;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+            margin-top: 60px;
+            opacity: 0;
+            animation: fadeUp 1s ease forwards 2.1s;
+        }
+
+        .stat {
+            text-align: center;
+            position: relative;
+        }
+
+        .stat::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 2px;
+            background: var(--gold-primary);
+        }
+
+        .stat-value {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 2.5rem;
+            color: var(--gold-bright);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--cream);
+            opacity: 0.7;
+            margin-top: 8px;
+        }
+
+        /* ========== DECORATIVE DIVIDER ========== */
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 60px 0;
+        }
+
+        .divider-line {
+            width: 150px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+        }
+
+        .divider-diamond {
+            width: 12px;
+            height: 12px;
+            background: var(--gold-primary);
+            transform: rotate(45deg);
+        }
+
+        /* ========== SECTIONS ========== */
+        section {
+            position: relative;
+            padding: 100px 60px;
+            z-index: 1;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--gold-primary);
+            margin-bottom: 20px;
+        }
+
+        .section-header p {
+            font-family: 'Bodoni Moda', serif;
+            font-style: italic;
+            font-size: 1.1rem;
+            color: var(--cream);
+            opacity: 0.8;
+        }
+
+        /* ========== INVESTMENT OVERVIEW ========== */
+        .investment-overview {
+            background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy-medium) 50%, var(--navy-deep) 100%);
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .overview-card {
+            background: linear-gradient(135deg, rgba(26, 26, 58, 0.8) 0%, rgba(18, 18, 42, 0.9) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 50px 40px;
+            position: relative;
+            text-align: center;
+            transition: all 0.4s ease;
+            overflow: hidden;
+        }
+
+        .overview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .overview-card:hover {
+            border-color: var(--gold-primary);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.1);
+        }
+
+        .overview-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 30px;
+        }
+
+        .card-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: var(--gold-primary);
+            stroke-width: 1;
+            fill: none;
+        }
+
+        .overview-card h3 {
+            font-size: 1.3rem;
+            color: var(--gold-primary);
+            margin-bottom: 10px;
+        }
+
+        .overview-card .value {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 2.5rem;
+            color: var(--gold-bright);
+            margin-bottom: 15px;
+        }
+
+        .overview-card p {
+            font-size: 0.9rem;
+            color: var(--cream);
+            opacity: 0.7;
+        }
+
+        /* ========== STRATEGY SECTION ========== */
+        .strategy {
+            background: var(--navy-deep);
+        }
+
+        .strategy-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .strategy-visual {
+            position: relative;
+            padding: 60px;
+        }
+
+        .strategy-pattern {
+            position: absolute;
+            inset: 0;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .strategy-pattern::before,
+        .strategy-pattern::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--gold-primary);
+        }
+
+        .strategy-pattern::before {
+            top: -1px;
+            left: -1px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .strategy-pattern::after {
+            bottom: -1px;
+            right: -1px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .chevron-stack {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .chevron {
+            width: 100%;
+            height: 40px;
+            position: relative;
+            opacity: 0;
+            animation: chevronFade 2s ease infinite;
+        }
+
+        .chevron:nth-child(1) { animation-delay: 0s; }
+        .chevron:nth-child(2) { animation-delay: 0.2s; }
+        .chevron:nth-child(3) { animation-delay: 0.4s; }
+        .chevron:nth-child(4) { animation-delay: 0.6s; }
+        .chevron:nth-child(5) { animation-delay: 0.8s; }
+
+        @keyframes chevronFade {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        .chevron::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-135deg);
+            width: 60px;
+            height: 60px;
+            border-left: 2px solid var(--gold-primary);
+            border-bottom: 2px solid var(--gold-primary);
+        }
+
+        .strategy-text h2 {
+            font-size: 2rem;
+            color: var(--gold-primary);
+            margin-bottom: 30px;
+        }
+
+        .strategy-list {
+            list-style: none;
+        }
+
+        .strategy-list li {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .strategy-list li::before {
+            content: '◆';
+            color: var(--gold-primary);
+            font-size: 0.7rem;
+        }
+
+        /* ========== RISK FRAMEWORK ========== */
+        .risk-framework {
+            background: linear-gradient(180deg, var(--navy-medium) 0%, var(--navy-deep) 100%);
+        }
+
+        .risk-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .risk-item {
+            background: rgba(10, 10, 26, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .risk-item::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            width: 15px;
+            height: 15px;
+            background: var(--navy-deep);
+            border-left: 1px solid rgba(212, 175, 55, 0.3);
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .risk-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 20px;
+            stroke: var(--gold-primary);
+            stroke-width: 1;
+            fill: none;
+        }
+
+        .risk-item h4 {
+            font-family: 'Poiret One', cursive;
+            font-size: 1rem;
+            letter-spacing: 0.15em;
+            color: var(--gold-primary);
+            margin-bottom: 10px;
+        }
+
+        .risk-item p {
+            font-size: 0.9rem;
+            color: var(--cream);
+            opacity: 0.7;
+        }
+
+        /* ========== SUCCESS CRITERIA ========== */
+        .success-criteria {
+            background: var(--navy-deep);
+        }
+
+        .criteria-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .criteria-row {
+            display: flex;
+            align-items: center;
+            padding: 30px 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            position: relative;
+        }
+
+        .criteria-number {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 3rem;
+            color: var(--gold-primary);
+            opacity: 0.3;
+            width: 100px;
+            text-align: center;
+        }
+
+        .criteria-content {
+            flex: 1;
+            padding-left: 40px;
+            border-left: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .criteria-content h4 {
+            font-family: 'Poiret One', cursive;
+            font-size: 1.2rem;
+            letter-spacing: 0.15em;
+            color: var(--gold-bright);
+            margin-bottom: 8px;
+        }
+
+        .criteria-content p {
+            font-size: 0.95rem;
+            color: var(--cream);
+            opacity: 0.7;
+        }
+
+        /* ========== TAGLINE SECTION ========== */
+        .tagline-section {
+            padding: 150px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tagline-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
+        }
+
+        .tagline-frame {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            padding: 80px 60px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .tagline-frame::before,
+        .tagline-frame::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+        }
+
+        .tagline-frame::before {
+            top: -1px;
+            left: -1px;
+            border-top: 3px solid var(--gold-primary);
+            border-left: 3px solid var(--gold-primary);
+        }
+
+        .tagline-frame::after {
+            bottom: -1px;
+            right: -1px;
+            border-bottom: 3px solid var(--gold-primary);
+            border-right: 3px solid var(--gold-primary);
+        }
+
+        .tagline-quote {
+            font-family: 'Bodoni Moda', serif;
+            font-style: italic;
+            font-size: 2.5rem;
+            color: var(--gold-primary);
+            line-height: 1.4;
+        }
+
+        .tagline-quote::before {
+            content: '"';
+            font-size: 4rem;
+            color: var(--gold-dark);
+            opacity: 0.5;
+            display: block;
+            margin-bottom: -30px;
+        }
+
+        /* ========== FOOTER ========== */
+        footer {
+            background: linear-gradient(180deg, var(--navy-deep) 0%, #050510 100%);
+            padding: 80px 60px 40px;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-family: 'Poiret One', cursive;
+            font-size: 2.5rem;
+            letter-spacing: 0.4em;
+            color: var(--gold-primary);
+            margin-bottom: 30px;
+        }
+
+        .footer-ornament {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .footer-ornament span {
+            display: block;
+        }
+
+        .footer-ornament .line {
+            width: 80px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+        }
+
+        .footer-ornament .diamond {
+            width: 8px;
+            height: 8px;
+            background: var(--gold-primary);
+            transform: rotate(45deg);
+        }
+
+        .footer-text {
+            font-size: 0.85rem;
+            color: var(--cream);
+            opacity: 0.5;
+            letter-spacing: 0.1em;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .footer-links a {
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold-primary);
+            opacity: 1;
+        }
+
+        /* ========== CTA BUTTON ========== */
+        .cta-button {
+            display: inline-block;
+            padding: 18px 50px;
+            background: transparent;
+            border: 1px solid var(--gold-primary);
+            color: var(--gold-primary);
+            font-family: 'Poiret One', cursive;
+            font-size: 1rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-button:hover {
+            background: var(--gold-primary);
+            color: var(--navy-deep);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        /* ========== SCROLL ANIMATIONS ========== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ========== FAN PATTERN ========== */
+        .fan-pattern {
+            position: absolute;
+            width: 200px;
+            height: 100px;
+            overflow: hidden;
+        }
+
+        .fan-pattern::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-conic-gradient(
+                from -90deg at 50% 100%,
+                transparent 0deg,
+                transparent 8deg,
+                rgba(212, 175, 55, 0.1) 8deg,
+                rgba(212, 175, 55, 0.1) 10deg
+            );
+            transform: translateX(-50%);
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 1024px) {
+            .overview-grid,
+            .risk-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .strategy-content {
+                grid-template-columns: 1fr;
+                gap: 60px;
+            }
+
+            .hero-stats {
+                gap: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 20px 30px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            section {
+                padding: 60px 30px;
+            }
+
+            .overview-grid,
+            .risk-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .tagline-quote {
+                font-size: 1.8rem;
+            }
+
+            .criteria-row {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .criteria-content {
+                padding-left: 0;
+                padding-top: 20px;
+                border-left: none;
+                border-top: 1px solid rgba(212, 175, 55, 0.3);
+            }
+        }
+
+        /* ========== AMBIENT GLOW ========== */
+        .ambient-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-1 {
+            top: -300px;
+            right: -200px;
+        }
+
+        .glow-2 {
+            bottom: 20%;
+            left: -300px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Geometric Pattern Background -->
+    <div class="geo-pattern">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+            <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#D4AF37" stroke-width="0.3"/>
+            </pattern>
+            <rect width="100%" height="100%" fill="url(#grid)"/>
+        </svg>
+    </div>
+
+    <!-- Ambient Glows -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+
+    <!-- Header -->
+    <header id="header">
+        <a href="#" class="logo">
+            <div class="logo-icon">
+                <svg viewBox="0 0 50 50">
+                    <polygon points="25,5 45,15 45,35 25,45 5,35 5,15" />
+                    <polygon points="25,12 38,19 38,31 25,38 12,31 12,19" />
+                </svg>
+            </div>
+            JADEFI
+        </a>
+        <nav>
+            <a href="#overview">Overview</a>
+            <a href="#strategy">Strategy</a>
+            <a href="#risk">Risk</a>
+            <a href="#criteria">Criteria</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg">
+            <div class="hero-sunburst"></div>
+            <div class="hero-lines">
+                <div class="hero-line" style="left: 10%;"></div>
+                <div class="hero-line" style="left: 25%; animation-delay: 0.3s;"></div>
+                <div class="hero-line" style="left: 40%; animation-delay: 0.6s;"></div>
+                <div class="hero-line" style="left: 55%; animation-delay: 0.9s;"></div>
+                <div class="hero-line" style="left: 70%; animation-delay: 1.2s;"></div>
+                <div class="hero-line" style="left: 85%; animation-delay: 1.5s;"></div>
+            </div>
+        </div>
+
+        <div class="hero-content">
+            <div class="hero-emblem">
+                <svg viewBox="0 0 120 120">
+                    <circle cx="60" cy="60" r="55" class="emblem-outer"/>
+                    <circle cx="60" cy="60" r="45" class="emblem-inner"/>
+                    <polygon points="60,20 70,40 90,40 75,55 80,75 60,65 40,75 45,55 30,40 50,40" class="emblem-outer" style="animation-delay: 1.2s;"/>
+                </svg>
+            </div>
+
+            <p class="hero-pretitle">Disciplined Capital Deployment</p>
+            <h1>JadeFi</h1>
+            <p class="hero-subtitle">Where precision meets opportunity</p>
+
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-value">$25K</span>
+                    <p class="stat-label">Total Investment</p>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">~10%</span>
+                    <p class="stat-label">Target Return</p>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">30-60</span>
+                    <p class="stat-label">Day Evaluation</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider">
+        <span class="divider-line"></span>
+        <span class="divider-diamond"></span>
+        <span class="divider-line"></span>
+    </div>
+
+    <!-- Investment Overview -->
+    <section class="investment-overview" id="overview">
+        <div class="section-header reveal">
+            <h2>Investment Overview</h2>
+            <p>A measured approach to algorithmic capital deployment</p>
+        </div>
+
+        <div class="overview-grid">
+            <div class="overview-card reveal">
+                <div class="card-icon">
+                    <svg viewBox="0 0 70 70">
+                        <circle cx="35" cy="35" r="30"/>
+                        <path d="M35 15 L35 55 M20 35 L50 35"/>
+                        <path d="M35 25 L45 35 L35 45"/>
+                    </svg>
+                </div>
+                <h3>Build Capital</h3>
+                <div class="value">$15,000</div>
+                <p>Development and infrastructure</p>
+            </div>
+
+            <div class="overview-card reveal" style="animation-delay: 0.1s;">
+                <div class="card-icon">
+                    <svg viewBox="0 0 70 70">
+                        <rect x="15" y="20" width="40" height="35" rx="3"/>
+                        <path d="M20 30 L30 40 L50 25"/>
+                        <circle cx="35" cy="12" r="5"/>
+                    </svg>
+                </div>
+                <h3>Test Capital</h3>
+                <div class="value">$10,000</div>
+                <p>Live market validation</p>
+            </div>
+
+            <div class="overview-card reveal" style="animation-delay: 0.2s;">
+                <div class="card-icon">
+                    <svg viewBox="0 0 70 70">
+                        <path d="M35 10 L60 25 L60 50 L35 65 L10 50 L10 25 Z"/>
+                        <path d="M35 10 L35 65 M10 25 L60 50 M60 25 L10 50"/>
+                    </svg>
+                </div>
+                <h3>Time Horizon</h3>
+                <div class="value">30-60 Days</div>
+                <p>Structured evaluation window</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider">
+        <span class="divider-line"></span>
+        <span class="divider-diamond"></span>
+        <span class="divider-line"></span>
+    </div>
+
+    <!-- Strategy Section -->
+    <section class="strategy" id="strategy">
+        <div class="strategy-content">
+            <div class="strategy-visual reveal">
+                <div class="strategy-pattern"></div>
+                <div class="chevron-stack">
+                    <div class="chevron"></div>
+                    <div class="chevron"></div>
+                    <div class="chevron"></div>
+                    <div class="chevron"></div>
+                    <div class="chevron"></div>
+                </div>
+            </div>
+
+            <div class="strategy-text reveal">
+                <h2>Execution Strategy</h2>
+                <ul class="strategy-list">
+                    <li>Automated trading in 1-2 liquid markets</li>
+                    <li>Rule-based execution methodology</li>
+                    <li>No discretionary intervention</li>
+                    <li>Systematic position management</li>
+                    <li>Real-time investor dashboard</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider">
+        <span class="divider-line"></span>
+        <span class="divider-diamond"></span>
+        <span class="divider-line"></span>
+    </div>
+
+    <!-- Risk Framework -->
+    <section class="risk-framework" id="risk">
+        <div class="section-header reveal">
+            <h2>Risk Management</h2>
+            <p>Hard limits. No exceptions.</p>
+        </div>
+
+        <div class="risk-grid">
+            <div class="risk-item reveal">
+                <svg class="risk-icon" viewBox="0 0 50 50">
+                    <rect x="5" y="15" width="40" height="30" rx="2"/>
+                    <path d="M15 25 L15 35 M25 20 L25 35 M35 22 L35 35"/>
+                </svg>
+                <h4>Position Sizing</h4>
+                <p>Calculated exposure limits per trade</p>
+            </div>
+
+            <div class="risk-item reveal" style="animation-delay: 0.1s;">
+                <svg class="risk-icon" viewBox="0 0 50 50">
+                    <circle cx="25" cy="25" r="20"/>
+                    <path d="M25 10 L25 25 L35 30"/>
+                </svg>
+                <h4>Drawdown Caps</h4>
+                <p>Maximum loss thresholds enforced</p>
+            </div>
+
+            <div class="risk-item reveal" style="animation-delay: 0.2s;">
+                <svg class="risk-icon" viewBox="0 0 50 50">
+                    <polygon points="25,5 45,45 5,45"/>
+                    <line x1="25" y1="20" x2="25" y2="32"/>
+                    <circle cx="25" cy="38" r="2"/>
+                </svg>
+                <h4>Circuit Breakers</h4>
+                <p>Automatic halt on anomalies</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider">
+        <span class="divider-line"></span>
+        <span class="divider-diamond"></span>
+        <span class="divider-line"></span>
+    </div>
+
+    <!-- Success Criteria -->
+    <section class="success-criteria" id="criteria">
+        <div class="section-header reveal">
+            <h2>Success Criteria</h2>
+            <p>Measurable benchmarks for evaluation</p>
+        </div>
+
+        <div class="criteria-container">
+            <div class="criteria-row reveal">
+                <span class="criteria-number">I</span>
+                <div class="criteria-content">
+                    <h4>System Uptime</h4>
+                    <p>Consistent operational availability throughout evaluation period</p>
+                </div>
+            </div>
+
+            <div class="criteria-row reveal">
+                <span class="criteria-number">II</span>
+                <div class="criteria-content">
+                    <h4>Risk Adherence</h4>
+                    <p>Zero breaches of established position and drawdown limits</p>
+                </div>
+            </div>
+
+            <div class="criteria-row reveal">
+                <span class="criteria-number">III</span>
+                <div class="criteria-content">
+                    <h4>Performance</h4>
+                    <p>Target ~10% return within evaluation window</p>
+                </div>
+            </div>
+
+            <div class="criteria-row reveal">
+                <span class="criteria-number">IV</span>
+                <div class="criteria-content">
+                    <h4>Transparency</h4>
+                    <p>Full visibility via real-time investor dashboard</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tagline Section -->
+    <section class="tagline-section">
+        <div class="tagline-bg"></div>
+        <div class="tagline-frame reveal">
+            <p class="tagline-quote">Competence before expansion</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-logo">JADEFI</div>
+        <div class="footer-ornament">
+            <span class="line"></span>
+            <span class="diamond"></span>
+            <span class="line"></span>
+        </div>
+        <p class="footer-text">Disciplined Capital Deployment Platform</p>
+        <div class="footer-links">
+            <a href="#overview">Overview</a>
+            <a href="#strategy">Strategy</a>
+            <a href="#risk">Risk</a>
+            <a href="#criteria">Criteria</a>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll reveal animation
+        const revealElements = document.querySelectorAll('.reveal');
+        
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            
+            revealElements.forEach(el => {
+                const elementTop = el.getBoundingClientRect().top;
+                const revealPoint = windowHeight - 100;
+                
+                if (elementTop < revealPoint) {
+                    el.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        window.addEventListener('load', revealOnScroll);
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Parallax effect for ambient glows
+        document.addEventListener('mousemove', (e) => {
+            const glows = document.querySelectorAll('.ambient-glow');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            glows.forEach((glow, index) => {
+                const speed = (index + 1) * 20;
+                glow.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+            });
+        });
+
+        // Counter animation for stats
+        const animateValue = (element, start, end, duration) => {
+            const range = end - start;
+            const increment = range / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= end) {
+                    current = end;
+                    clearInterval(timer);
+                }
+                
+                if (element.textContent.includes('$')) {
+                    element.textContent = '$' + Math.round(current / 1000) + 'K';
+                } else if (element.textContent.includes('%')) {
+                    element.textContent = '~' + Math.round(current) + '%';
+                } else {
+                    element.textContent = Math.round(current) + '-60';
+                }
+            }, 16);
+        };
+
+        // Trigger counter animation when stats are visible
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statValues = entry.target.querySelectorAll('.stat-value');
+                    statValues.forEach(stat => {
+                        const text = stat.textContent;
+                        if (text.includes('$25K')) {
+                            animateValue(stat, 0, 25000, 1500);
+                        } else if (text.includes('10%')) {
+                            animateValue(stat, 0, 10, 1500);
+                        } else if (text.includes('30')) {
+                            animateValue(stat, 0, 30, 1500);
+                        }
+                    });
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const heroStats = document.querySelector('.hero-stats');
+        if (heroStats) {
+            statsObserver.observe(heroStats);
+        }
+    </script>
+</body>
+</html>

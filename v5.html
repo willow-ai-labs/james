@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JadeFi - Disciplined Capital Deployment Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --lavender: #E8E0F0;
+            --lavender-soft: #F3EEF8;
+            --rose: #F8E8EC;
+            --rose-soft: #FDF5F7;
+            --mint: #E5F4F0;
+            --mint-accent: #A8D5C8;
+            --cream: #FDFBF7;
+            --cream-warm: #FFF9F0;
+            --jade: #7EBDA8;
+            --jade-deep: #5A9E87;
+            --jade-light: #B8DDD0;
+            --text-primary: #3D4A5C;
+            --text-secondary: #6B7A8F;
+            --text-muted: #9BA5B5;
+            --white: #FFFFFF;
+            --shadow-soft: rgba(125, 140, 165, 0.08);
+            --shadow-medium: rgba(125, 140, 165, 0.12);
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--cream);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.7;
+        }
+
+        /* Gradient Mesh Background */
+        .gradient-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: 
+                radial-gradient(ellipse 80% 50% at 20% 20%, var(--lavender-soft) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 30%, var(--rose-soft) 0%, transparent 45%),
+                radial-gradient(ellipse 70% 50% at 60% 80%, var(--mint) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 30% at 10% 70%, var(--cream-warm) 0%, transparent 40%),
+                linear-gradient(180deg, var(--cream) 0%, var(--white) 100%);
+        }
+
+        /* Floating Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.5;
+            z-index: -1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, var(--lavender) 0%, var(--rose) 100%);
+            top: -100px;
+            right: -50px;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, var(--mint) 0%, var(--jade-light) 100%);
+            bottom: 10%;
+            left: -80px;
+            animation-delay: -5s;
+        }
+
+        .orb-3 {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, var(--rose) 0%, var(--lavender) 100%);
+            top: 50%;
+            right: 10%;
+            animation-delay: -10s;
+        }
+
+        .orb-4 {
+            width: 250px;
+            height: 250px;
+            background: linear-gradient(135deg, var(--cream-warm) 0%, var(--rose-soft) 100%);
+            top: 70%;
+            left: 20%;
+            animation-delay: -15s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.05); }
+            50% { transform: translate(-20px, 20px) scale(0.95); }
+            75% { transform: translate(20px, 10px) scale(1.02); }
+        }
+
+        /* Bokeh Lights */
+        .bokeh-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .bokeh {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.3) 50%, transparent 70%);
+            animation: bokeh-float 15s ease-in-out infinite;
+        }
+
+        @keyframes bokeh-float {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.6; }
+            50% { transform: translateY(-30px) scale(1.1); opacity: 0.8; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            backdrop-filter: blur(20px);
+            background: var(--glass-bg);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.4s ease;
+        }
+
+        nav.scrolled {
+            padding: 1rem 3rem;
+            box-shadow: 0 4px 30px var(--shadow-soft);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--jade-deep);
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--jade) 0%, var(--jade-deep) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(126, 189, 168, 0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--jade) 0%, var(--jade-light) 100%);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--jade-deep);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            text-align: center;
+            animation: fadeUp 1.2s ease-out;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--jade-deep);
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px var(--shadow-soft);
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); box-shadow: 0 4px 20px var(--shadow-soft); }
+            50% { transform: scale(1.02); box-shadow: 0 6px 30px var(--shadow-medium); }
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--jade);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        h1 {
+            font-family: 'Quicksand', sans-serif;
+            font-size: clamp(2.8rem, 6vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.15;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        h1 span {
+            background: linear-gradient(135deg, var(--jade) 0%, var(--jade-deep) 50%, var(--mint-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem 2rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            min-width: 160px;
+            box-shadow: 0 8px 32px var(--shadow-soft);
+            transition: all 0.4s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px var(--shadow-medium);
+        }
+
+        .stat-value {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--jade-deep);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.3rem;
+        }
+
+        /* Section Styles */
+        section {
+            padding: 6rem 2rem;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 4rem;
+        }
+
+        h2 {
+            font-family: 'Quicksand', sans-serif;
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Investment Overview */
+        .investment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .investment-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 40px var(--shadow-soft);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .investment-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--jade-light) 0%, var(--jade) 50%, var(--mint-accent) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .investment-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px var(--shadow-medium);
+        }
+
+        .investment-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--lavender-soft) 0%, var(--rose-soft) 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.4s ease;
+        }
+
+        .investment-card:hover .card-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .investment-card h3 {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .investment-card p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        .highlight-value {
+            color: var(--jade-deep);
+            font-weight: 600;
+        }
+
+        /* Strategy Section */
+        .strategy-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .strategy-item {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+            padding: 2rem 0;
+            border-bottom: 1px solid rgba(125, 140, 165, 0.1);
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.6s ease;
+        }
+
+        .strategy-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .strategy-number {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--jade-light);
+            line-height: 1;
+            min-width: 60px;
+        }
+
+        .strategy-content h3 {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .strategy-content p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Risk Framework */
+        .risk-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .risk-item {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 24px var(--shadow-soft);
+            border: 1px solid rgba(232, 224, 240, 0.5);
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .risk-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px var(--shadow-medium);
+        }
+
+        .risk-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--mint) 0%, var(--jade-light) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .risk-item h4 {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .risk-item p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Success Metrics */
+        .metrics-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 3rem;
+            box-shadow: 0 16px 64px var(--shadow-soft);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .metric-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--white);
+            border-radius: 20px;
+            transition: all 0.4s ease;
+        }
+
+        .metric-item:hover {
+            transform: scale(1.05);
+        }
+
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, var(--lavender-soft) 0%, var(--mint) 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .metric-item h4 {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .metric-item p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Philosophy Section */
+        .philosophy-section {
+            background: linear-gradient(180deg, var(--white) 0%, var(--lavender-soft) 50%, var(--white) 100%);
+        }
+
+        .philosophy-quote {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+        }
+
+        .quote-mark {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 8rem;
+            color: var(--jade-light);
+            opacity: 0.3;
+            line-height: 1;
+            position: absolute;
+            top: -3rem;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .philosophy-quote blockquote {
+            font-family: 'Quicksand', sans-serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.4;
+            position: relative;
+            z-index: 1;
+        }
+
+        .philosophy-quote blockquote span {
+            background: linear-gradient(135deg, var(--jade) 0%, var(--jade-deep) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .philosophy-description {
+            margin-top: 2rem;
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 8rem 2rem;
+            text-align: center;
+        }
+
+        .cta-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, var(--jade) 0%, var(--jade-deep) 100%);
+            border-radius: 36px;
+            padding: 4rem 3rem;
+            box-shadow: 0 24px 80px rgba(126, 189, 168, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 50%);
+            animation: rotate 15s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .cta-container h2 {
+            color: var(--white);
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-container p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2.5rem;
+            background: var(--white);
+            color: var(--jade-deep);
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            position: relative;
+            z-index: 1;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            text-align: center;
+            background: var(--white);
+            border-top: 1px solid rgba(232, 224, 240, 0.5);
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--jade-deep);
+            margin-bottom: 1rem;
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .footer-disclaimer {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(232, 224, 240, 0.5);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 7rem 1.5rem 3rem;
+            }
+
+            .hero-stats {
+                gap: 1rem;
+            }
+
+            .stat-item {
+                min-width: 140px;
+                padding: 1.2rem 1.5rem;
+            }
+
+            section {
+                padding: 4rem 1.5rem;
+            }
+
+            .strategy-item {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .strategy-number {
+                font-size: 2rem;
+            }
+
+            .cta-container {
+                padding: 3rem 2rem;
+                border-radius: 28px;
+            }
+        }
+
+        /* Scroll Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Parallax Effect */
+        .parallax-layer {
+            will-change: transform;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="gradient-mesh"></div>
+    <div class="orb orb-1 parallax-layer" data-speed="0.02"></div>
+    <div class="orb orb-2 parallax-layer" data-speed="0.03"></div>
+    <div class="orb orb-3 parallax-layer" data-speed="0.015"></div>
+    <div class="orb orb-4 parallax-layer" data-speed="0.025"></div>
+
+    <!-- Bokeh Lights -->
+    <div class="bokeh-container" id="bokeh-container"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-content">
+            <div class="logo">
+                <div class="logo-icon">◇</div>
+                JadeFi
+            </div>
+            <ul class="nav-links">
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#strategy">Strategy</a></li>
+                <li><a href="#risk">Risk Framework</a></li>
+                <li><a href="#metrics">Success Criteria</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                Seed Investment Opportunity
+            </div>
+            <h1>Disciplined <span>Capital Deployment</span> Platform</h1>
+            <p class="hero-subtitle">
+                A systematic approach to automated trading with transparency, 
+                risk discipline, and measured growth at its core.
+            </p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-value">$25K</span>
+                    <span class="stat-label">Total Raise</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">~10%</span>
+                    <span class="stat-label">Target Return</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">30-60</span>
+                    <span class="stat-label">Day Window</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Investment Overview -->
+    <section id="overview">
+        <div class="section-header fade-in">
+            <h2>Investment Overview</h2>
+            <p class="section-subtitle">A clear, structured approach to capital deployment with defined parameters</p>
+        </div>
+        <div class="investment-grid">
+            <div class="investment-card fade-in">
+                <div class="card-icon">💎</div>
+                <h3>Capital Structure</h3>
+                <p>
+                    <span class="highlight-value">$25,000</span> total investment comprised of 
+                    <span class="highlight-value">$15,000</span> for platform development and 
+                    <span class="highlight-value">$10,000</span> as test trading capital for live market validation.
+                </p>
+            </div>
+            <div class="investment-card fade-in">
+                <div class="card-icon">⏱</div>
+                <h3>Evaluation Window</h3>
+                <p>
+                    <span class="highlight-value">30-60 day</span> structured evaluation period to validate 
+                    system performance, risk management efficacy, and operational reliability before any 
+                    consideration of scaling.
+                </p>
+            </div>
+            <div class="investment-card fade-in">
+                <div class="card-icon">📊</div>
+                <h3>Performance Target</h3>
+                <p>
+                    Conservative <span class="highlight-value">~10% target return</span> emphasizing 
+                    consistent execution and capital preservation over aggressive growth. 
+                    Sustainable returns through disciplined methodology.
+                </p>
+            </div>
+            <div class="investment-card fade-in">
+                <div class="card-icon">🎯</div>
+                <h3>Market Focus</h3>
+                <p>
+                    Automated trading concentrated in <span class="highlight-value">1-2 liquid markets</span> 
+                    to ensure optimal execution quality, tight spreads, and sufficient depth for 
+                    position management.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Strategy Section -->
+    <section id="strategy" class="philosophy-section">
+        <div class="section-header fade-in">
+            <h2>Execution Philosophy</h2>
+            <p class="section-subtitle">Rule-based precision removes emotion from the equation</p>
+        </div>
+        <div class="strategy-container">
+            <div class="strategy-item fade-in">
+                <span class="strategy-number">01</span>
+                <div class="strategy-content">
+                    <h3>Rule-Based Execution</h3>
+                    <p>Every trade follows predefined algorithmic rules. No discretionary intervention, no emotional decisions, no deviation from the system.</p>
+                </div>
+            </div>
+            <div class="strategy-item fade-in">
+                <span class="strategy-number">02</span>
+                <div class="strategy-content">
+                    <h3>Automated Operations</h3>
+                    <p>24/7 systematic monitoring and execution. The platform operates continuously while maintaining strict adherence to risk parameters.</p>
+                </div>
+            </div>
+            <div class="strategy-item fade-in">
+                <span class="strategy-number">03</span>
+                <div class="strategy-content">
+                    <h3>Complete Transparency</h3>
+                    <p>Real-time investor dashboard providing full visibility into positions, performance metrics, and system status at all times.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Risk Framework -->
+    <section id="risk">
+        <div class="section-header fade-in">
+            <h2>Risk Framework</h2>
+            <p class="section-subtitle">Hard limits enforced at the system level, not discretion</p>
+        </div>
+        <div class="risk-grid">
+            <div class="risk-item fade-in">
+                <div class="risk-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5A9E87" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <path d="M3 9h18"/>
+                        <path d="M9 21V9"/>
+                    </svg>
+                </div>
+                <div>
+                    <h4>Position Sizing</h4>
+                    <p>Strict maximum position sizes relative to total capital, algorithmically enforced</p>
+                </div>
+            </div>
+            <div class="risk-item fade-in">
+                <div class="risk-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5A9E87" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h4>Drawdown Caps</h4>
+                    <p>Hard stop-loss thresholds that automatically halt trading to preserve capital</p>
+                </div>
+            </div>
+            <div class="risk-item fade-in">
+                <div class="risk-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5A9E87" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                </div>
+                <div>
+                    <h4>Continuous Monitoring</h4>
+                    <p>Real-time system health checks and automated alerting for any anomalies</p>
+                </div>
+            </div>
+            <div class="risk-item fade-in">
+                <div class="risk-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5A9E87" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
+                </div>
+                <div>
+                    <h4>Full Audit Trail</h4>
+                    <p>Complete logging of all trades, decisions, and system events for review</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Metrics -->
+    <section id="metrics">
+        <div class="section-header fade-in">
+            <h2>Success Criteria</h2>
+            <p class="section-subtitle">Measurable benchmarks for the evaluation period</p>
+        </div>
+        <div class="metrics-container fade-in">
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-icon">⚡</div>
+                    <h4>System Uptime</h4>
+                    <p>Operational reliability</p>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-icon">🛡</div>
+                    <h4>Risk Adherence</h4>
+                    <p>Zero limit breaches</p>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-icon">📈</div>
+                    <h4>Performance</h4>
+                    <p>Target achievement</p>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-icon">👁</div>
+                    <h4>Transparency</h4>
+                    <p>Full reporting access</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Philosophy Quote -->
+    <section class="philosophy-section">
+        <div class="philosophy-quote fade-in">
+            <span class="quote-mark">"</span>
+            <blockquote>
+                <span>Competence</span> before expansion.
+            </blockquote>
+            <p class="philosophy-description">
+                We believe in proving capability at small scale before pursuing growth. 
+                This evaluation period establishes the foundation for everything that follows.
+            </p>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-container fade-in">
+            <h2>Interested in Learning More?</h2>
+            <p>Review the complete investment documentation and system specifications</p>
+            <a href="#" class="cta-button">
+                Request Full Details
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">JadeFi</div>
+            <p class="footer-text">
+                A disciplined approach to automated trading.<br>
+                Transparency, risk management, and measured growth.
+            </p>
+            <p class="footer-disclaimer">
+                This document is for informational purposes only and does not constitute an offer to sell or a solicitation of an offer to buy any securities. Past performance is not indicative of future results. All investments involve risk, including the possible loss of principal.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Generate Bokeh Lights
+        function createBokeh() {
+            const container = document.getElementById('bokeh-container');
+            const colors = ['rgba(232, 224, 240, 0.6)', 'rgba(248, 232, 236, 0.5)', 'rgba(229, 244, 240, 0.5)', 'rgba(168, 213, 200, 0.4)'];
+            
+            for (let i = 0; i < 15; i++) {
+                const bokeh = document.createElement('div');
+                bokeh.className = 'bokeh';
+                bokeh.style.width = `${Math.random() * 100 + 40}px`;
+                bokeh.style.height = bokeh.style.width;
+                bokeh.style.left = `${Math.random() * 100}%`;
+                bokeh.style.top = `${Math.random() * 100}%`;
+                bokeh.style.background = `radial-gradient(circle at 30% 30%, ${colors[Math.floor(Math.random() * colors.length)]} 0%, transparent 70%)`;
+                bokeh.style.animationDelay = `${Math.random() * 10}s`;
+                bokeh.style.animationDuration = `${15 + Math.random() * 10}s`;
+                container.appendChild(bokeh);
+            }
+        }
+        createBokeh();
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Parallax effect for orbs
+        document.addEventListener('mousemove', (e) => {
+            const orbs = document.querySelectorAll('.parallax-layer');
+            const mouseX = e.clientX / window.innerWidth - 0.5;
+            const mouseY = e.clientY / window.innerHeight - 0.5;
+            
+            orbs.forEach(orb => {
+                const speed = parseFloat(orb.dataset.speed);
+                const x = mouseX * 100 * speed;
+                const y = mouseY * 100 * speed;
+                orb.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in, .strategy-item').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add staggered animation delays to cards
+        document.querySelectorAll('.investment-card').forEach((card, i) => {
+            card.style.transitionDelay = `${i * 0.1}s`;
+        });
+
+        document.querySelectorAll('.risk-item').forEach((item, i) => {
+            item.style.transitionDelay = `${i * 0.08}s`;
+        });
+
+        document.querySelectorAll('.strategy-item').forEach((item, i) => {
+            item.style.transitionDelay = `${i * 0.15}s`;
+        });
+    </script>
+</body>
+</html>
